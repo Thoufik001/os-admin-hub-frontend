@@ -2,106 +2,190 @@
 :root,
 .dark {
   color-scheme: light;
-  --background: #f7f8fb;
-  --foreground: #18202f;
+  --font-sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --default-font-family: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 500;
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 18px;
+  --text-base: 13px;
+  --text-base--line-height: 18px;
+  --text-lg: 16px;
+  --text-lg--line-height: 22px;
+  --text-xl: 18px;
+  --text-xl--line-height: 24px;
+  --text-3xl: 24px;
+  --text-3xl--line-height: 30px;
+  --text-7xl: 24px;
+  --text-7xl--line-height: 30px;
+  --background: #ffffff;
+  --foreground: #292929;
   --surface: #ffffff;
-  --surface-foreground: #18202f;
+  --surface-foreground: #292929;
   --card: #ffffff;
-  --card-foreground: #18202f;
+  --card-foreground: #292929;
   --popover: #ffffff;
-  --popover-foreground: #18202f;
-  --primary: #5964df;
+  --popover-foreground: #292929;
+  --primary: #292929;
   --primary-foreground: #ffffff;
-  --secondary: #eef1f7;
-  --secondary-foreground: #20283a;
-  --muted: #eef2f8;
-  --muted-foreground: #6d7587;
-  --accent: #eef1ff;
-  --accent-foreground: #27305f;
-  --destructive: #d63b4a;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #5d5d5d;
+  --muted: #f5f5f5;
+  --muted-foreground: #7f7f7f;
+  --accent: #f5f5f5;
+  --accent-foreground: #292929;
+  --destructive: #5d5d5d;
   --destructive-foreground: #ffffff;
-  --success: #178a56;
+  --success: #5d5d5d;
   --success-foreground: #ffffff;
-  --warning: #b77918;
+  --warning: #5d5d5d;
   --warning-foreground: #ffffff;
-  --info: #087ea7;
+  --info: #5d5d5d;
   --info-foreground: #ffffff;
-  --border: #dce2ec;
-  --border-strong: #c6cedc;
-  --input: #dce2ec;
-  --ring: #5964df66;
-  --chart-1: #5964df;
-  --chart-2: #178a56;
-  --chart-3: #b77918;
-  --chart-4: #087ea7;
-  --chart-5: #d63b4a;
+  --border: #f2f2f2;
+  --border-strong: #e6e6e6;
+  --input: #f2f2f2;
+  --ring: #29292926;
+  --chart-1: #292929;
+  --chart-2: #5d5d5d;
+  --chart-3: #7f7f7f;
+  --chart-4: #5d5d5d;
+  --chart-5: #292929;
   --sidebar: #ffffff;
-  --sidebar-foreground: #566074;
-  --sidebar-primary: #5964df;
+  --sidebar-foreground: #5d5d5d;
+  --sidebar-primary: #292929;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #eef1ff;
-  --sidebar-accent-foreground: #20283a;
-  --sidebar-border: #dde3ee;
-  --sidebar-ring: #5964df66;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #292929;
+  --sidebar-border: #f2f2f2;
+  --sidebar-ring: #29292926;
 }
 
 body {
-  background:
-    radial-gradient(circle at 18% 0%, rgba(89, 100, 223, 0.08), transparent 26rem),
-    radial-gradient(circle at 92% 8%, rgba(8, 126, 167, 0.07), transparent 22rem),
-    var(--background);
+  background: var(--background);
+  color: #5d5d5d;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
 }
 
 aside.bg-sidebar,
 .bg-sidebar {
-  box-shadow: 1px 0 0 rgba(148, 163, 184, 0.18);
+  box-shadow: 1px 0 0 #f2f2f2;
 }
 
 .bg-background\/80 {
-  background-color: rgba(247, 248, 251, 0.86);
+  background-color: rgba(255, 255, 255, 0.86);
 }
 
 .bg-card,
 .bg-surface,
 .bg-popover,
 [role="dialog"] {
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-shadow: none;
 }
 
 .hover\:bg-surface\/60:hover,
 .hover\:bg-surface\/40:hover {
-  background-color: rgba(241, 245, 249, 0.74);
+  background-color: #f5f5f5;
 }
 
 .bg-primary\/15 {
-  background-color: rgba(89, 100, 223, 0.12);
+  background-color: #f5f5f5;
 }
 
 .ring-primary\/40 {
-  --tw-ring-color: rgba(89, 100, 223, 0.28);
+  --tw-ring-color: #f2f2f2;
 }
 
 .bg-success\/15 {
-  background-color: rgba(23, 138, 86, 0.11);
+  background-color: #f5f5f5;
 }
 
 .bg-warning\/15 {
-  background-color: rgba(183, 121, 24, 0.12);
+  background-color: #f5f5f5;
 }
 
 .bg-destructive\/15 {
-  background-color: rgba(214, 59, 74, 0.11);
+  background-color: #f5f5f5;
 }
 
 .bg-info\/15 {
-  background-color: rgba(8, 126, 167, 0.11);
+  background-color: #f5f5f5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.font-semibold {
+  color: #292929;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.text-muted-foreground {
+  color: #7f7f7f;
+}
+
+.text-foreground {
+  color: #292929;
+}
+
+.text-sidebar-foreground\/80,
+.text-sidebar-foreground\/80:hover {
+  color: #5d5d5d;
+}
+
+.text-\[10px\],
+.text-\[11px\] {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.text-\[22px\] {
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.tracking-tight,
+.tracking-\[0\.14em\],
+.tracking-wider {
+  letter-spacing: 0;
+}
+
+.border,
+.border-b,
+.border-r,
+.divide-border > :not(:last-child) {
+  border-color: #f2f2f2;
+}
+
+.bg-sidebar-accent,
+.bg-accent,
+.bg-muted {
+  background-color: #f5f5f5;
+}
+
+svg [stroke],
+svg[stroke] {
+  stroke-width: 1 !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.26) padding-box;
+  background: #d9d9d9 padding-box;
   border: 2px solid transparent;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.42) padding-box;
+  background: #bfbfbf padding-box;
 }
