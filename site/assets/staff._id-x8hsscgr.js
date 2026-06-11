@@ -1,0 +1,1 @@
+import{j as o,A as t}from"./index-Df4dNtFP.js";const n=()=>o.jsx(t,{children:o.jsx("div",{className:"p-8 text-sm text-muted-foreground",children:"Staff member not found."})});export{n as notFoundComponent};

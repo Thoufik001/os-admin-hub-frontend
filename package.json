@@ -1,0 +1,11 @@
+{
+  "name": "os-admin-hub-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/preview-server.mjs",
+    "preview": "node scripts/preview-server.mjs",
+    "mirror": "node scripts/mirror-site.mjs"
+  }
+}

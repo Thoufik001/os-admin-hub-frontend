@@ -1,0 +1,4 @@
+/* Project design overrides. Keep edits here so the mirrored app bundle stays intact. */
+:root {
+  --design-note: "ready for custom styling";
+}
