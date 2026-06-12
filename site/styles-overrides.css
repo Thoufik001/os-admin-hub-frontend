@@ -233,12 +233,104 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:first-chil
   box-shadow: none;
 }
 
-main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:first-child li:nth-child(n + 6) {
+main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(2) {
   display: none;
 }
 
-main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(2) {
-  display: none;
+.recent-activity-table-wrap {
+  overflow-x: auto;
+}
+
+.recent-activity-table {
+  width: 100%;
+  min-width: 54rem;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.recent-activity-table th {
+  border-bottom: 1px solid var(--border);
+  padding: 0.625rem 1.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.recent-activity-table td {
+  height: 3.25rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.625rem 1.25rem;
+  vertical-align: middle;
+}
+
+.recent-activity-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.recent-activity-table th:nth-child(1),
+.recent-activity-table td:nth-child(1) {
+  width: 7rem;
+}
+
+.recent-activity-table th:nth-child(2),
+.recent-activity-table td:nth-child(2) {
+  width: 30%;
+}
+
+.recent-activity-table th:nth-child(3),
+.recent-activity-table td:nth-child(3) {
+  width: 24%;
+}
+
+.recent-activity-table th:nth-child(4),
+.recent-activity-table td:nth-child(4) {
+  width: 18%;
+}
+
+.recent-activity-table th:nth-child(5),
+.recent-activity-table td:nth-child(5) {
+  width: 7.5rem;
+}
+
+.recent-primary,
+.recent-target,
+.recent-actor {
+  min-width: 0;
+}
+
+.recent-primary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.recent-primary span,
+.recent-target,
+.recent-actor {
+  overflow: hidden;
+  color: var(--foreground);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-primary small,
+.recent-time {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-actor {
+  color: var(--muted-foreground);
+  font-weight: 400;
 }
 
 main > .space-y-6 > .grid.lg\:grid-cols-3 {
