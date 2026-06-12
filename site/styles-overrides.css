@@ -646,6 +646,75 @@ main > .space-y-6 > .grid.lg\:grid-cols-3 > section:nth-child(2) a:hover > svg:l
   min-width: 45rem;
 }
 
+.audit-log-table-wrap {
+  overflow-x: auto;
+}
+
+.audit-log-table {
+  min-width: 56rem;
+  table-layout: fixed;
+}
+
+.audit-log-table th {
+  color: #7c8699;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.audit-log-table th:nth-child(1) {
+  width: 27%;
+}
+
+.audit-log-table th:nth-child(2) {
+  width: 29%;
+}
+
+.audit-log-table th:nth-child(3) {
+  width: 22%;
+}
+
+.audit-log-table th:nth-child(4) {
+  width: 12%;
+}
+
+.audit-log-table th:nth-child(5) {
+  width: 12%;
+  text-align: right;
+}
+
+.audit-log-table td {
+  height: 4.5rem;
+  vertical-align: middle;
+}
+
+.audit-log-table td:nth-child(5) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.audit-action-cell,
+.audit-detail-cell,
+.audit-log-table td:nth-child(3) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audit-action-cell {
+  white-space: nowrap;
+}
+
+.audit-detail-cell {
+  line-height: 1.45;
+}
+
+.audit-avatar {
+  flex: 0 0 auto;
+}
+
+.audit-module-pill {
+  background: #f0f2fb;
+}
+
 .orbac-page {
   --orbac-soft-border: #e6e6e6;
   --orbac-soft-text: #77716c;
