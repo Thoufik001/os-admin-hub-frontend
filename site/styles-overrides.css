@@ -173,8 +173,8 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-3 > section {
 main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-3 > section:first-child,
 main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-3 > section:nth-child(2) {
   display: flex;
-  min-height: 16rem;
-  max-height: 16rem;
+  min-height: 23rem;
+  max-height: 23rem;
   flex-direction: column;
 }
 
