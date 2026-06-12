@@ -243,7 +243,7 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(
 
 .recent-activity-table {
   width: 100%;
-  min-width: 54rem;
+  min-width: 46rem;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.8125rem;
@@ -273,32 +273,26 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(
 
 .recent-activity-table th:nth-child(1),
 .recent-activity-table td:nth-child(1) {
-  width: 7rem;
+  width: 54%;
 }
 
 .recent-activity-table th:nth-child(2),
 .recent-activity-table td:nth-child(2) {
-  width: 30%;
+  width: 16%;
 }
 
 .recent-activity-table th:nth-child(3),
 .recent-activity-table td:nth-child(3) {
-  width: 24%;
+  width: 9rem;
 }
 
 .recent-activity-table th:nth-child(4),
 .recent-activity-table td:nth-child(4) {
-  width: 18%;
-}
-
-.recent-activity-table th:nth-child(5),
-.recent-activity-table td:nth-child(5) {
   width: 7.5rem;
 }
 
 .recent-primary,
-.recent-target,
-.recent-actor {
+.recent-target {
   min-width: 0;
 }
 
@@ -309,8 +303,7 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(
 }
 
 .recent-primary span,
-.recent-target,
-.recent-actor {
+.recent-target {
   overflow: hidden;
   color: var(--foreground);
   font-weight: 500;
@@ -328,9 +321,10 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(
   white-space: nowrap;
 }
 
-.recent-actor {
+.recent-activity-feed .recent-target {
   color: var(--muted-foreground);
   font-weight: 400;
+  text-transform: capitalize;
 }
 
 main > .space-y-6 > .grid.lg\:grid-cols-3 {
