@@ -137,6 +137,20 @@ main > .space-y-6 > .grid.lg\:grid-cols-3 > section:nth-child(2) a:hover > svg:l
   opacity: 1;
 }
 
+.roles-action-cell {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  min-width: 8.5rem;
+  background: var(--card);
+  box-shadow: -1px 0 0 var(--border);
+}
+
+th.roles-action-cell {
+  z-index: 3;
+  background: var(--surface);
+}
+
 ::-webkit-scrollbar-thumb {
   background: rgba(100, 116, 139, 0.26) padding-box;
   border: 2px solid transparent;
