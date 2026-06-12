@@ -50,6 +50,34 @@ body {
     radial-gradient(circle at 18% 0%, rgba(89, 100, 223, 0.08), transparent 26rem),
     radial-gradient(circle at 92% 8%, rgba(8, 126, 167, 0.07), transparent 22rem),
     var(--background);
+  overflow: hidden;
+}
+
+body > .flex.min-h-screen.w-full.bg-background.text-foreground {
+  height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar {
+  position: sticky;
+  top: 0;
+  align-self: stretch;
+  height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col {
+  min-height: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > main {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 aside.bg-sidebar,
