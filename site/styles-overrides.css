@@ -283,6 +283,191 @@ main > .space-y-6 > .grid.lg\:grid-cols-3 > section:nth-child(2) a:hover > svg:l
   min-width: 45rem;
 }
 
+.orbac-page {
+  --orbac-soft-border: #e6e6e6;
+  --orbac-soft-text: #77716c;
+  --orbac-chip-bg: #f4f5f6;
+}
+
+.orbac-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.orbac-metric-card {
+  min-height: 9.25rem;
+  border: 1px solid var(--orbac-soft-border);
+  border-radius: 0.75rem;
+  background: #ffffff;
+  padding: 1.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.orbac-metric-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.orbac-metric-icon {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.625rem;
+  border: 1px solid #e6eef7;
+  background: #f3f9ff;
+  color: #2f6f9f;
+}
+
+.orbac-metric-roles .orbac-metric-icon {
+  border-color: #ccefdc;
+  background: #effcf5;
+  color: #318157;
+}
+
+.orbac-metric-actions .orbac-metric-icon {
+  border-color: #f4dc78;
+  background: #fffaf0;
+  color: #b77a16;
+}
+
+.orbac-metric-objects .orbac-metric-icon {
+  border-color: #e2e2e2;
+  background: #f3f3f3;
+  color: #6c6762;
+}
+
+.orbac-metric-label {
+  color: var(--orbac-soft-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.orbac-metric-value {
+  margin-top: 1.25rem;
+  color: var(--foreground);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.orbac-metric-hint {
+  margin-top: 0.75rem;
+  color: var(--orbac-soft-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.orbac-policy-toolbar {
+  margin-top: -0.25rem;
+}
+
+.orbac-policy-table {
+  border-color: var(--orbac-soft-border);
+  border-radius: 0.75rem;
+  box-shadow: none;
+}
+
+.orbac-policy-table-inner {
+  table-layout: fixed;
+  min-width: 58rem;
+}
+
+.orbac-policy-table-inner th {
+  color: var(--orbac-soft-text);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.orbac-policy-table-inner th:nth-child(1) {
+  width: 14%;
+}
+
+.orbac-policy-table-inner th:nth-child(2) {
+  width: 9%;
+}
+
+.orbac-policy-table-inner th:nth-child(3) {
+  width: 17%;
+}
+
+.orbac-policy-table-inner th:nth-child(4) {
+  width: 11%;
+}
+
+.orbac-policy-table-inner th:nth-child(6) {
+  width: 7.5rem;
+  text-align: right;
+}
+
+.orbac-policy-table-inner td {
+  height: 3.75rem;
+  vertical-align: middle;
+}
+
+.orbac-role-pill,
+.orbac-object-pill {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 0.375rem;
+  background: var(--orbac-chip-bg);
+  padding: 0.25rem 0.625rem;
+  color: #4b5563;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.orbac-pill-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #334155;
+}
+
+.orbac-action-text,
+.orbac-object-pill {
+  text-transform: uppercase;
+}
+
+.orbac-action-text {
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.orbac-rule-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.orbac-policy-table-inner td:nth-child(6) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .orbac-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .orbac-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) {
   table-layout: fixed;
 }
