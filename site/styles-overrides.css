@@ -185,6 +185,63 @@ main > .space-y-6 > .grid.lg\:grid-cols-3 > section:nth-child(2) a:hover > svg:l
   min-width: 45rem;
 }
 
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) {
+  table-layout: fixed;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) th:nth-child(1) {
+  width: 25%;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) th:nth-child(2) {
+  width: 16%;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) th:nth-child(3) {
+  width: 22%;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) th:nth-child(4) {
+  width: 12%;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) th:nth-child(5) {
+  width: 13%;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) th:nth-child(6) {
+  width: 12%;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) td:nth-child(2),
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) td:nth-child(4),
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) td:nth-child(5) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) td:nth-child(3) > div.flex.flex-wrap {
+  display: inline-flex;
+  max-width: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 0.375rem;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) td:nth-child(3) > div.flex.flex-wrap > span {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+main table:has(tbody td:nth-child(6) button):has(tbody td:nth-child(3) > div.flex.flex-wrap):not(.roles-permission-table) td:nth-child(3) > div.flex.flex-wrap > span svg {
+  flex: 0 0 auto;
+}
+
 .roles-modal-backdrop {
   position: fixed;
   inset: 0;
