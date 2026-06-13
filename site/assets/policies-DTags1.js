@@ -17,6 +17,7 @@ import { S as Select, a as SelectTrigger, b as SelectValue, c as SelectContent, 
 import "./index-CWQB4imr.js";
 
 const ChevronRightIcon = createIcon("chevron-right", [["path", { d: "m9 18 6-6-6-6", key: "chevron-1" }]]);
+const TABLE_PAGE_SIZE = 50;
 
 const actionLanguage = {
   read: "view",
@@ -272,7 +273,7 @@ function O() {
                   }),
                   jsx.jsx("tbody", {
                     className: "divide-y divide-border",
-                    children: policies.slice(0, 400).map((policy) =>
+                    children: policies.slice(0, TABLE_PAGE_SIZE).map((policy) =>
                       jsx.jsxs(
                         "tr",
                         {
@@ -320,13 +321,13 @@ function O() {
                 className: "admin-table-footer",
                 children: [
                   jsx.jsx("span", {
-                    children: policies.length ? `Showing 1-${Math.min(policies.length, 400)} of ${policies.length} policies` : "Showing 0 of 0 policies",
+                    children: policies.length ? `Showing 1-${Math.min(policies.length, TABLE_PAGE_SIZE)} of ${policies.length} policies` : "Showing 0 of 0 policies",
                   }),
                   jsx.jsxs("div", {
                     className: "admin-table-pagination",
                     children: [
                       jsx.jsx("button", { type: "button", "aria-label": "Previous page", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }),
-                      jsx.jsx("span", { children: `1 / ${Math.max(1, Math.ceil(policies.length / 400))}` }),
+                      jsx.jsx("span", { children: `1 / ${Math.max(1, Math.ceil(policies.length / TABLE_PAGE_SIZE))}` }),
                       jsx.jsx("button", { type: "button", "aria-label": "Next page", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) }),
                     ],
                   }),

@@ -44,6 +44,7 @@ const EditIcon = createIcon("square-pen", [
   ["path", { d: "M18.4 2.6a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4Z", key: "edit-2" }],
 ]);
 const ChevronRightIcon = createIcon("chevron-right", [["path", { d: "m9 18 6-6-6-6", key: "chevron-1" }]]);
+const TABLE_PAGE_SIZE = 50;
 
 function MetricCard({ icon: Icon, label, value, hint, tone = "rules" }) {
   return jsx.jsxs("section", {
@@ -93,6 +94,7 @@ function DepartmentsPage() {
         return a.name.localeCompare(b.name);
       });
   }, [departments, staff, query, status, sortBy]);
+  const tableRows = visible.slice(0, TABLE_PAGE_SIZE);
   const openNew = () => {
     setSelectedId(null);
     setDrawerOpen(true);
@@ -130,7 +132,7 @@ function DepartmentsPage() {
                 className: "w-full text-sm",
               children: [
                 jsx.jsx("thead", { children: jsx.jsxs("tr", { className: "border-b border-border bg-surface/50 text-left text-xs uppercase tracking-wider text-muted-foreground", children: [jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Code" }), jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Department" }), jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Head of Department" }), jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Staff" }), jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Status" }), jsx.jsx("th", { className: "px-4 py-2.5 font-medium" })] }) }),
-                jsx.jsx("tbody", { className: "divide-y divide-border", children: visible.map((department) => {
+                jsx.jsx("tbody", { className: "divide-y divide-border", children: tableRows.map((department) => {
                   const head = staff.find((person) => person.id === department.headOfDepartmentId);
                   const staffCount = staff.filter((person) => person.departmentId === department.id).length;
                   return jsx.jsxs("tr", { className: "group hover:bg-surface/60", children: [
@@ -145,8 +147,8 @@ function DepartmentsPage() {
               ],
               }),
               jsx.jsxs("div", { className: "admin-table-footer", children: [
-                jsx.jsx("span", { children: visible.length ? `Showing 1-${Math.min(visible.length, 10)} of ${visible.length} departments` : "Showing 0 of 0 departments" }),
-                jsx.jsxs("div", { className: "admin-table-pagination", children: [jsx.jsx("button", { type: "button", "aria-label": "Previous page", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }), jsx.jsx("span", { children: `1 / ${Math.max(1, Math.ceil(visible.length / 10))}` }), jsx.jsx("button", { type: "button", "aria-label": "Next page", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) })] }),
+                jsx.jsx("span", { children: visible.length ? `Showing 1-${Math.min(visible.length, TABLE_PAGE_SIZE)} of ${visible.length} departments` : "Showing 0 of 0 departments" }),
+                jsx.jsxs("div", { className: "admin-table-pagination", children: [jsx.jsx("button", { type: "button", "aria-label": "Previous page", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }), jsx.jsx("span", { children: `1 / ${Math.max(1, Math.ceil(visible.length / TABLE_PAGE_SIZE))}` }), jsx.jsx("button", { type: "button", "aria-label": "Next page", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) })] }),
               ] }),
             ],
           }),

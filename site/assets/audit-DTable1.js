@@ -198,6 +198,7 @@ const avatarTone = {
 };
 
 function AuditPage() {
+  const TABLE_PAGE_SIZE = 50;
   const [query, setQuery] = React.useState("");
   const [moduleFilter, setModuleFilter] = React.useState("all");
   const [sortBy, setSortBy] = React.useState("recent");
@@ -219,7 +220,8 @@ function AuditPage() {
     });
   }, [filteredRows, sortBy]);
   const totalEvents = moduleFilter === "all" && !query ? 327 : visibleRows.length;
-  const pageCount = Math.max(1, Math.ceil(totalEvents / 10));
+  const pageCount = Math.max(1, Math.ceil(totalEvents / TABLE_PAGE_SIZE));
+  const tableRows = visibleRows.slice(0, TABLE_PAGE_SIZE);
   const selectedRow = auditRows.find((row) => row.id === selectedId) ?? null;
 
   return jsx.jsxs(AppShell, {
@@ -311,7 +313,7 @@ function AuditPage() {
                               children: "No events match your filters.",
                             }),
                           })
-                        : visibleRows.map((row) => jsx.jsx(AuditRow, { row, onOpen: setSelectedId }, row.id)),
+                        : tableRows.map((row) => jsx.jsx(AuditRow, { row, onOpen: setSelectedId }, row.id)),
                   }),
                 ],
               }),
@@ -319,7 +321,7 @@ function AuditPage() {
                 className: "admin-table-footer",
                 children: [
                   jsx.jsx("span", {
-                    children: `Showing 1-${Math.min(10, totalEvents)} of ${totalEvents} events`,
+                    children: totalEvents ? `Showing 1-${Math.min(TABLE_PAGE_SIZE, totalEvents)} of ${totalEvents} events` : "Showing 0 of 0 events",
                   }),
                   jsx.jsxs("div", {
                     className: "admin-table-pagination",

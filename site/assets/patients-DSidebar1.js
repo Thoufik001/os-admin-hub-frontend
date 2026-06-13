@@ -65,6 +65,7 @@ const CheckCircleIcon = createIcon("circle-check", [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }],
 ]);
+const TABLE_PAGE_SIZE = 50;
 
 const patients = [
   { id: "p1", mrn: "MRN-24031", name: "Aarav Mehta", age: 42, gender: "M", status: "in-care", department: "Cardiology", doctor: "Marcus Lee", nurse: "Ines Moreau", lastVisit: "2026-06-13T08:55:00+05:30", insurance: "Active", access: "Doctor, Nurse", reason: "Post angioplasty review" },
@@ -163,6 +164,7 @@ function PatientPage() {
         return new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime();
       });
   }, [patientRecords, query, statusFilter, departmentFilter, sortBy]);
+  const tableRows = filtered.slice(0, TABLE_PAGE_SIZE);
   React.useEffect(() => {
     if (filtered.length > 0 && !filtered.some((patient) => patient.id === selectedId)) {
       setSelectedId(filtered[0].id);
@@ -304,7 +306,7 @@ function PatientPage() {
                           className: "divide-y divide-border",
                           children: filtered.length === 0
                             ? jsx.jsx("tr", { children: jsx.jsx("td", { colSpan: 7, className: "px-4 py-10 text-center text-sm text-muted-foreground", children: "No patients match the current filters." }) })
-                            : filtered.map((patient) => jsx.jsxs("tr", {
+                            : tableRows.map((patient) => jsx.jsxs("tr", {
                                 onClick: () => openPatient(patient),
                                 "data-patient-detail-id": patient.id,
                                 className: cn("cursor-pointer hover:bg-surface/60", detailOpen && selected.id === patient.id && "bg-accent/70"),
@@ -346,8 +348,8 @@ function PatientPage() {
                     jsx.jsxs("div", {
                       className: "admin-table-footer",
                       children: [
-                        jsx.jsx("span", { children: filtered.length ? `Showing 1-${Math.min(filtered.length, 10)} of ${filtered.length} patients` : "Showing 0 of 0 patients" }),
-                        jsx.jsxs("div", { className: "admin-table-pagination", children: [jsx.jsx("button", { type: "button", "aria-label": "Previous page", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }), jsx.jsx("span", { children: `1 / ${Math.max(1, Math.ceil(filtered.length / 10))}` }), jsx.jsx("button", { type: "button", "aria-label": "Next page", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) })] }),
+                        jsx.jsx("span", { children: filtered.length ? `Showing 1-${Math.min(filtered.length, TABLE_PAGE_SIZE)} of ${filtered.length} patients` : "Showing 0 of 0 patients" }),
+                        jsx.jsxs("div", { className: "admin-table-pagination", children: [jsx.jsx("button", { type: "button", "aria-label": "Previous page", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }), jsx.jsx("span", { children: `1 / ${Math.max(1, Math.ceil(filtered.length / TABLE_PAGE_SIZE))}` }), jsx.jsx("button", { type: "button", "aria-label": "Next page", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) })] }),
                       ],
                     }),
                   ],
