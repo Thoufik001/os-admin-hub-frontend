@@ -481,9 +481,6 @@ body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sideba
   content: "Operations";
 }
 
-body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(2)::after,
-body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(3)::after,
-body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(4)::after,
 body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(7)::after {
   min-width: 1.5rem;
   height: 1.5rem;
@@ -495,18 +492,6 @@ body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sideba
   font-weight: 550;
   line-height: 1.5rem;
   text-align: center;
-}
-
-body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(2)::after {
-  content: "12";
-}
-
-body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(3)::after {
-  content: "128";
-}
-
-body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(4)::after {
-  content: "6";
 }
 
 body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(7)::after {
