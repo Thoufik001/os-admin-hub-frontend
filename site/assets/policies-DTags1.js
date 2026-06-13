@@ -1,4 +1,5 @@
 import {
+  c as createIcon,
   u as useStore,
   r as React,
   O as policyObjects,
@@ -14,6 +15,8 @@ import {
 import { S as StatusPill } from "./StatusPill-DNoDot1.js";
 import { S as Select, a as SelectTrigger, b as SelectValue, c as SelectContent, d as SelectItem } from "./select-9XonwzbX.js";
 import "./index-CWQB4imr.js";
+
+const ChevronRightIcon = createIcon("chevron-right", [["path", { d: "m9 18 6-6-6-6", key: "chevron-1" }]]);
 
 const actionLanguage = {
   read: "view",
@@ -313,12 +316,22 @@ function O() {
                   }),
                 ],
               }),
-              policies.length > 400
-                ? jsx.jsxs("div", {
-                    className: "border-t border-border bg-surface/30 px-4 py-2 text-center text-xs text-muted-foreground",
-                    children: ["Showing first 400 of ", policies.length, ". Use filters to narrow results."],
-                  })
-                : null,
+              jsx.jsxs("div", {
+                className: "admin-table-footer",
+                children: [
+                  jsx.jsx("span", {
+                    children: policies.length ? `Showing 1-${Math.min(policies.length, 400)} of ${policies.length} policies` : "Showing 0 of 0 policies",
+                  }),
+                  jsx.jsxs("div", {
+                    className: "admin-table-pagination",
+                    children: [
+                      jsx.jsx("button", { type: "button", "aria-label": "Previous page", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }),
+                      jsx.jsx("span", { children: `1 / ${Math.max(1, Math.ceil(policies.length / 400))}` }),
+                      jsx.jsx("button", { type: "button", "aria-label": "Next page", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) }),
+                    ],
+                  }),
+                ],
+              }),
             ],
           }),
         ],

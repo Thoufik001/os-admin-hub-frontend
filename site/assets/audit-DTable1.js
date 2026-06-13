@@ -195,6 +195,7 @@ const avatarTone = {
 function AuditPage() {
   const [query, setQuery] = React.useState("");
   const [moduleFilter, setModuleFilter] = React.useState("all");
+  const [sortBy, setSortBy] = React.useState("recent");
   const filteredRows = React.useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return auditRows.filter((row) => {
@@ -203,6 +204,16 @@ function AuditPage() {
       return matchesModule && (!normalizedQuery || haystack.includes(normalizedQuery));
     });
   }, [query, moduleFilter]);
+  const visibleRows = React.useMemo(() => {
+    return [...filteredRows].sort((a, b) => {
+      if (sortBy === "action") return a.action.localeCompare(b.action);
+      if (sortBy === "module") return a.module.localeCompare(b.module) || a.action.localeCompare(b.action);
+      if (sortBy === "performer") return a.performer.localeCompare(b.performer) || a.action.localeCompare(b.action);
+      return auditRows.findIndex((row) => row.id === a.id) - auditRows.findIndex((row) => row.id === b.id);
+    });
+  }, [filteredRows, sortBy]);
+  const totalEvents = moduleFilter === "all" && !query ? 327 : visibleRows.length;
+  const pageCount = Math.max(1, Math.ceil(totalEvents / 10));
 
   return jsx.jsxs(AppShell, {
     children: [
@@ -243,6 +254,24 @@ function AuditPage() {
                   }),
                 ],
               }),
+              jsx.jsxs(Select, {
+                value: sortBy,
+                onValueChange: (value) => setSortBy(value),
+                children: [
+                  jsx.jsx(SelectTrigger, {
+                    className: "h-8 w-[170px] bg-surface text-xs",
+                    children: jsx.jsx(SelectValue, { placeholder: "Sort" }),
+                  }),
+                  jsx.jsxs(SelectContent, {
+                    children: [
+                      jsx.jsx(SelectItem, { value: "recent", children: "Sort: Recent" }),
+                      jsx.jsx(SelectItem, { value: "action", children: "Sort: Action" }),
+                      jsx.jsx(SelectItem, { value: "module", children: "Sort: Module" }),
+                      jsx.jsx(SelectItem, { value: "performer", children: "Sort: Performer" }),
+                    ],
+                  }),
+                ],
+              }),
             ],
           }),
           jsx.jsxs("div", {
@@ -267,7 +296,7 @@ function AuditPage() {
                   jsx.jsx("tbody", {
                     className: "divide-y divide-border",
                     children:
-                      filteredRows.length === 0
+                      visibleRows.length === 0
                         ? jsx.jsx("tr", {
                             children: jsx.jsx("td", {
                               colSpan: 6,
@@ -275,24 +304,21 @@ function AuditPage() {
                               children: "No events match your filters.",
                             }),
                           })
-                        : filteredRows.map((row) => jsx.jsx(AuditRow, { row }, row.id)),
+                        : visibleRows.map((row) => jsx.jsx(AuditRow, { row }, row.id)),
                   }),
                 ],
               }),
               jsx.jsxs("div", {
-                className: "audit-table-footer",
+                className: "admin-table-footer",
                 children: [
                   jsx.jsx("span", {
-                    children:
-                      moduleFilter === "all" && !query
-                        ? "Showing 1-10 of 327 events"
-                        : `Showing ${filteredRows.length} matching events`,
+                    children: `Showing 1-${Math.min(10, totalEvents)} of ${totalEvents} events`,
                   }),
                   jsx.jsxs("div", {
-                    className: "audit-pagination",
+                    className: "admin-table-pagination",
                     children: [
                       jsx.jsx("button", { type: "button", "aria-label": "Previous page", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }),
-                      jsx.jsx("span", { children: "1 / 33" }),
+                      jsx.jsx("span", { children: `1 / ${pageCount}` }),
                       jsx.jsx("button", { type: "button", "aria-label": "Next page", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) }),
                     ],
                   }),

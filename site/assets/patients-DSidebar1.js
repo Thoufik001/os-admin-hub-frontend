@@ -256,63 +256,74 @@ function PatientPage() {
               }),
               jsx.jsx("div", {
                 className: "overflow-x-auto rounded-xl border border-border bg-card",
-                children: jsx.jsxs("table", {
-                  className: "patient-table w-full text-sm",
+                children: jsx.jsxs(React.Fragment, {
                   children: [
-                    jsx.jsx("thead", {
-                      children: jsx.jsxs("tr", {
-                        className: "border-b border-border bg-surface/50 text-left text-xs uppercase tracking-wider text-muted-foreground",
-                        children: [
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Patient" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Department" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Doctor" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Nurse" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Status" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Last visit" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium" }),
-                        ],
-                      }),
-                    }),
-                    jsx.jsx("tbody", {
-                      className: "divide-y divide-border",
-                      children: filtered.length === 0
-                        ? jsx.jsx("tr", { children: jsx.jsx("td", { colSpan: 7, className: "px-4 py-10 text-center text-sm text-muted-foreground", children: "No patients match the current filters." }) })
-                        : filtered.map((patient) => jsx.jsxs("tr", {
-                            onClick: () => openPatient(patient),
-                            "data-patient-detail-id": patient.id,
-                            className: cn("cursor-pointer hover:bg-surface/60", detailOpen && selected.id === patient.id && "bg-accent/70"),
+                    jsx.jsxs("table", {
+                      className: "patient-table w-full text-sm",
+                      children: [
+                        jsx.jsx("thead", {
+                          children: jsx.jsxs("tr", {
+                            className: "border-b border-border bg-surface/50 text-left text-xs uppercase tracking-wider text-muted-foreground",
                             children: [
-                              jsx.jsx("td", {
-                                className: "px-4 py-3",
-                                children: jsx.jsxs("div", {
-                                  className: "flex items-center gap-3",
-                                  children: [
-                                    jsx.jsx("div", { className: "patient-avatar", children: initials(patient.name) }),
-                                    jsx.jsxs("div", { className: "min-w-0", children: [jsx.jsx("div", { className: "truncate font-medium text-foreground", children: patient.name }), jsx.jsxs("div", { className: "truncate text-xs text-muted-foreground", children: [patient.mrn, " · ", patient.age, patient.gender] })] }),
-                                  ],
-                                }),
-                              }),
-                              jsx.jsx("td", { className: "px-4 py-3 text-muted-foreground", children: patient.department }),
-                              jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx(PersonCell, { name: patient.doctor }) }),
-                              jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx(PersonCell, { name: patient.nurse }) }),
-                              jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx(PatientStatus, { status: patient.status }) }),
-                              jsx.jsx("td", { className: "px-4 py-3 text-xs text-muted-foreground", children: formatRelativeTime(patient.lastVisit) }),
-                              jsx.jsx("td", {
-                                className: "px-4 py-3 text-right",
-                                children: jsx.jsx("button", {
-                                  type: "button",
-                                  title: "View patient",
-                                  "data-patient-detail-id": patient.id,
-                                  onClick: (event) => {
-                                    event.stopPropagation();
-                                    openPatient(patient);
-                                  },
-                                  className: "inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground",
-                                  children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }),
-                                }),
-                              }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Patient" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Department" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Doctor" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Nurse" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Status" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Last visit" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium" }),
                             ],
-                          }, patient.id)),
+                          }),
+                        }),
+                        jsx.jsx("tbody", {
+                          className: "divide-y divide-border",
+                          children: filtered.length === 0
+                            ? jsx.jsx("tr", { children: jsx.jsx("td", { colSpan: 7, className: "px-4 py-10 text-center text-sm text-muted-foreground", children: "No patients match the current filters." }) })
+                            : filtered.map((patient) => jsx.jsxs("tr", {
+                                onClick: () => openPatient(patient),
+                                "data-patient-detail-id": patient.id,
+                                className: cn("cursor-pointer hover:bg-surface/60", detailOpen && selected.id === patient.id && "bg-accent/70"),
+                                children: [
+                                  jsx.jsx("td", {
+                                    className: "px-4 py-3",
+                                    children: jsx.jsxs("div", {
+                                      className: "flex items-center gap-3",
+                                      children: [
+                                        jsx.jsx("div", { className: "patient-avatar", children: initials(patient.name) }),
+                                        jsx.jsxs("div", { className: "min-w-0", children: [jsx.jsx("div", { className: "truncate font-medium text-foreground", children: patient.name }), jsx.jsxs("div", { className: "truncate text-xs text-muted-foreground", children: [patient.mrn, " · ", patient.age, patient.gender] })] }),
+                                      ],
+                                    }),
+                                  }),
+                                  jsx.jsx("td", { className: "px-4 py-3 text-muted-foreground", children: patient.department }),
+                                  jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx(PersonCell, { name: patient.doctor }) }),
+                                  jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx(PersonCell, { name: patient.nurse }) }),
+                                  jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx(PatientStatus, { status: patient.status }) }),
+                                  jsx.jsx("td", { className: "px-4 py-3 text-xs text-muted-foreground", children: formatRelativeTime(patient.lastVisit) }),
+                                  jsx.jsx("td", {
+                                    className: "px-4 py-3 text-right",
+                                    children: jsx.jsx("button", {
+                                      type: "button",
+                                      title: "View patient",
+                                      "data-patient-detail-id": patient.id,
+                                      onClick: (event) => {
+                                        event.stopPropagation();
+                                        openPatient(patient);
+                                      },
+                                      className: "inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground hover:border-border-strong hover:text-foreground",
+                                      children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }),
+                                    }),
+                                  }),
+                                ],
+                              }, patient.id)),
+                        }),
+                      ],
+                    }),
+                    jsx.jsxs("div", {
+                      className: "admin-table-footer",
+                      children: [
+                        jsx.jsx("span", { children: filtered.length ? `Showing 1-${Math.min(filtered.length, 10)} of ${filtered.length} patients` : "Showing 0 of 0 patients" }),
+                        jsx.jsxs("div", { className: "admin-table-pagination", children: [jsx.jsx("button", { type: "button", "aria-label": "Previous page", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }), jsx.jsx("span", { children: `1 / ${Math.max(1, Math.ceil(filtered.length / 10))}` }), jsx.jsx("button", { type: "button", "aria-label": "Next page", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) })] }),
+                      ],
                     }),
                   ],
                 }),
