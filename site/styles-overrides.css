@@ -290,6 +290,47 @@ main kbd {
   border-radius: var(--ds-radius-chip) !important;
 }
 
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > header button:has(kbd) kbd {
+  margin-left: 0.75rem !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  color: var(--muted-foreground);
+}
+
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > header button:has(kbd) kbd svg {
+  opacity: 0.75;
+}
+
+[cmdk-input-wrapper] {
+  height: 3.25rem;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 0 1rem !important;
+}
+
+[cmdk-input-wrapper]:focus-within {
+  border-bottom-color: var(--border-strong) !important;
+}
+
+[cmdk-input-wrapper] input,
+[cmdk-input] {
+  height: 100% !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+}
+
+[cmdk-input-wrapper] input:focus,
+[cmdk-input]:focus {
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
 body > .flex.min-h-screen.w-full.bg-background.text-foreground {
   height: 100svh;
   min-height: 100svh;
