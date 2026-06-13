@@ -1368,6 +1368,86 @@ main table td .rounded-full.bg-primary\/20 {
   font-size: 0.75rem;
 }
 
+.patient-combobox {
+  position: relative;
+}
+
+.patient-combobox-input {
+  width: 100%;
+  height: 2.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-radius-control);
+  background: var(--surface);
+  padding: 0 0.75rem;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  line-height: 1;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.patient-combobox-input::placeholder {
+  color: var(--muted-foreground);
+}
+
+.patient-combobox-input:focus {
+  border-color: rgba(91, 97, 222, 0.55);
+  box-shadow: 0 0 0 1px rgba(91, 97, 222, 0.35);
+}
+
+.patient-combobox-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  left: 0;
+  z-index: 60;
+  max-height: 13rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-radius-card);
+  background: var(--popover);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  padding: 0.25rem;
+}
+
+.patient-combobox-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.625rem;
+  border: 0;
+  border-radius: var(--ds-radius-control);
+  background: transparent;
+  padding: 0.5rem 0.625rem;
+  text-align: left;
+}
+
+.patient-combobox-option:hover,
+.patient-combobox-option:focus-visible {
+  background: var(--accent);
+  outline: none;
+}
+
+.patient-combobox-avatar {
+  display: inline-flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #eef0ff;
+  color: var(--primary);
+  font-size: 0.625rem;
+  font-weight: 650;
+}
+
+.patient-combobox-empty {
+  padding: 0.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+}
+
 .admin-detail-layer {
   position: fixed;
   inset: 0;

@@ -1,5 +1,6 @@
 import {
   c as createIcon,
+  u as useStore,
   r as React,
   j as jsx,
   A as AppShell,
@@ -9,10 +10,13 @@ import {
   V as DepartmentIcon,
   n as ShieldIcon,
   t as formatRelativeTime,
+  f as staffName,
   k as cn,
 } from "./index-Df4dNtFP.js";
+import { S as Select, a as SelectTrigger, b as SelectValue, c as SelectContent, d as SelectItem } from "./select-9XonwzbX.js";
 import { P as PlusIcon } from "./plus-C4qARnnh.js";
 import "./index-CWQB4imr.js";
+import "./index-NYxxxYXH.js";
 
 const ChevronRightIcon = createIcon("chevron-right", [
   ["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }],
@@ -223,33 +227,54 @@ function PatientPage() {
                       }),
                     ],
                   }),
-                  jsx.jsxs("select", {
+                  jsx.jsxs(Select, {
                     value: statusFilter,
-                    onChange: (event) => setStatusFilter(event.target.value),
-                    className: "app-filter-select h-8 w-[170px] rounded-md border border-border bg-surface px-3 pr-9 text-xs text-foreground focus:outline-none",
+                    onValueChange: setStatusFilter,
                     children: [
-                      jsx.jsx("option", { value: "all", children: `All (${patientRecords.length})` }),
-                      Object.entries(statusLabels).map(([value, label]) => jsx.jsx("option", { value, children: `${label} (${patientRecords.filter((patient) => patient.status === value).length})` }, value)),
+                      jsx.jsx(SelectTrigger, {
+                        className: "h-8 w-[170px] bg-surface text-xs",
+                        children: jsx.jsx(SelectValue, { placeholder: "Status" }),
+                      }),
+                      jsx.jsxs(SelectContent, {
+                        children: [
+                          jsx.jsx(SelectItem, { value: "all", children: `All (${patientRecords.length})` }),
+                          Object.entries(statusLabels).map(([value, label]) => jsx.jsx(SelectItem, { value, children: `${label} (${patientRecords.filter((patient) => patient.status === value).length})` }, value)),
+                        ],
+                      }),
                     ],
                   }),
-                  jsx.jsxs("select", {
+                  jsx.jsxs(Select, {
                     value: departmentFilter,
-                    onChange: (event) => setDepartmentFilter(event.target.value),
-                    className: "app-filter-select h-8 w-[190px] rounded-md border border-border bg-surface px-3 pr-9 text-xs text-foreground focus:outline-none",
+                    onValueChange: setDepartmentFilter,
                     children: [
-                      jsx.jsx("option", { value: "all", children: `All departments (${patientRecords.length})` }),
-                      departments.map((department) => jsx.jsx("option", { value: department, children: `${department} (${patientRecords.filter((patient) => patient.department === department).length})` }, department)),
+                      jsx.jsx(SelectTrigger, {
+                        className: "h-8 w-[190px] bg-surface text-xs",
+                        children: jsx.jsx(SelectValue, { placeholder: "Department" }),
+                      }),
+                      jsx.jsxs(SelectContent, {
+                        children: [
+                          jsx.jsx(SelectItem, { value: "all", children: `All departments (${patientRecords.length})` }),
+                          departments.map((department) => jsx.jsx(SelectItem, { value: department, children: `${department} (${patientRecords.filter((patient) => patient.department === department).length})` }, department)),
+                        ],
+                      }),
                     ],
                   }),
-                  jsx.jsxs("select", {
+                  jsx.jsxs(Select, {
                     value: sortBy,
-                    onChange: (event) => setSortBy(event.target.value),
-                    className: "app-filter-select h-8 w-[170px] rounded-md border border-border bg-surface px-3 pr-9 text-xs text-foreground focus:outline-none",
+                    onValueChange: setSortBy,
                     children: [
-                      jsx.jsx("option", { value: "lastVisit", children: "Sort: Recent" }),
-                      jsx.jsx("option", { value: "name", children: "Sort: Name" }),
-                      jsx.jsx("option", { value: "department", children: "Sort: Department" }),
-                      jsx.jsx("option", { value: "doctor", children: "Sort: Doctor" }),
+                      jsx.jsx(SelectTrigger, {
+                        className: "h-8 w-[170px] bg-surface text-xs",
+                        children: jsx.jsx(SelectValue, { placeholder: "Sort" }),
+                      }),
+                      jsx.jsxs(SelectContent, {
+                        children: [
+                          jsx.jsx(SelectItem, { value: "lastVisit", children: "Sort: Recent" }),
+                          jsx.jsx(SelectItem, { value: "name", children: "Sort: Name" }),
+                          jsx.jsx(SelectItem, { value: "department", children: "Sort: Department" }),
+                          jsx.jsx(SelectItem, { value: "doctor", children: "Sort: Doctor" }),
+                        ],
+                      }),
                     ],
                   }),
                 ],
@@ -338,6 +363,9 @@ function PatientPage() {
 }
 
 function PatientDetailSheet({ patient, open, onOpenChange, onSave, onDelete }) {
+  const staff = useStore((state) => state.staff);
+  const roles = useStore((state) => state.roles);
+  const systemDepartments = useStore((state) => state.departments);
   const [editing, setEditing] = React.useState(false);
   const [draft, setDraft] = React.useState(patient);
   const [confirmAction, setConfirmAction] = React.useState(null);
@@ -347,6 +375,15 @@ function PatientDetailSheet({ patient, open, onOpenChange, onSave, onDelete }) {
     setConfirmAction(null);
   }, [patient?.id, open]);
   if (!patient) return null;
+  const activeStaff = staff.filter((person) => person.status === "active");
+  const roleNameById = new Map(roles.map((role) => [role.id, role.name]));
+  const hasRole = (person, needle) => person.roleIds.some((roleId) => (roleNameById.get(roleId) ?? "").toLowerCase().includes(needle));
+  const doctorOptions = activeStaff.filter((person) => hasRole(person, "doctor"));
+  const nurseOptions = activeStaff.filter((person) => hasRole(person, "nurse"));
+  const departmentOptions = [...new Set([
+    ...systemDepartments.filter((department) => department.status === "active").map((department) => department.name),
+    ...patients.map((record) => record.department),
+  ])].sort();
   const updateDraft = (key, value) => setDraft((current) => ({ ...current, [key]: value }));
   const save = () => {
     onSave(draft);
@@ -403,20 +440,35 @@ function PatientDetailSheet({ patient, open, onOpenChange, onSave, onDelete }) {
                     className: "admin-detail-body",
                     children: [
                       jsx.jsx(EditableField, { label: "Name", value: draft.name, onChange: (value) => updateDraft("name", value) }),
-                      jsx.jsx(EditableField, { label: "Department", value: draft.department, onChange: (value) => updateDraft("department", value) }),
-                      jsx.jsx(EditableField, { label: "Doctor", value: draft.doctor, onChange: (value) => updateDraft("doctor", value) }),
-                      jsx.jsx(EditableField, { label: "Nurse", value: draft.nurse, onChange: (value) => updateDraft("nurse", value) }),
-                      jsx.jsx("label", {
-                        className: "block space-y-1.5",
+                      jsx.jsxs("div", {
+                        className: "grid grid-cols-2 gap-3",
                         children: [
-                          jsx.jsx("span", { className: "text-xs font-medium text-foreground", children: "Status" }),
-                          jsx.jsxs("select", {
-                            value: draft.status,
-                            onChange: (event) => updateDraft("status", event.target.value),
-                            className: "app-filter-select h-9 w-full rounded-md border border-border bg-surface px-3 pr-9 text-sm text-foreground focus:outline-none",
-                            children: Object.entries(statusLabels).map(([value, label]) => jsx.jsx("option", { value, children: label }, value)),
+                          jsx.jsx(EditableField, { label: "Age", value: String(draft.age ?? ""), onChange: (value) => updateDraft("age", value.replace(/\D/g, "")) }),
+                          jsx.jsx(SelectField, {
+                            label: "Gender",
+                            value: draft.gender ?? "M",
+                            onValueChange: (value) => updateDraft("gender", value),
+                            children: [
+                              jsx.jsx(SelectItem, { value: "M", children: "Male" }),
+                              jsx.jsx(SelectItem, { value: "F", children: "Female" }),
+                              jsx.jsx(SelectItem, { value: "O", children: "Other" }),
+                            ],
                           }),
                         ],
+                      }),
+                      jsx.jsx(SelectField, {
+                        label: "Department",
+                        value: draft.department,
+                        onValueChange: (value) => updateDraft("department", value),
+                        children: departmentOptions.map((department) => jsx.jsx(SelectItem, { value: department, children: department }, department)),
+                      }),
+                      jsx.jsx(StaffSearchField, { label: "Doctor", value: draft.doctor, options: doctorOptions.length ? doctorOptions : activeStaff, placeholder: "Search doctor by name", onChange: (value) => updateDraft("doctor", value) }),
+                      jsx.jsx(StaffSearchField, { label: "Nurse", value: draft.nurse, options: nurseOptions.length ? nurseOptions : activeStaff, placeholder: "Search nurse by name", onChange: (value) => updateDraft("nurse", value) }),
+                      jsx.jsx(SelectField, {
+                        label: "Status",
+                        value: draft.status,
+                        onValueChange: (value) => updateDraft("status", value),
+                        children: Object.entries(statusLabels).map(([value, label]) => jsx.jsx(SelectItem, { value, children: label }, value)),
                       }),
                       jsx.jsx("label", {
                         className: "block space-y-1.5",
@@ -467,6 +519,8 @@ function PatientDetailSheet({ patient, open, onOpenChange, onSave, onDelete }) {
                         children: [
                           jsx.jsx(DetailRow, { label: "Doctor", value: patient.doctor }),
                           jsx.jsx(DetailRow, { label: "Nurse", value: patient.nurse }),
+                          jsx.jsx(DetailRow, { label: "Age", value: patient.age }),
+                          jsx.jsx(DetailRow, { label: "Gender", value: patient.gender === "M" ? "Male" : patient.gender === "F" ? "Female" : "Other" }),
                           jsx.jsx(DetailRow, { label: "Department", value: patient.department }),
                           jsx.jsx(DetailRow, { label: "Last visit", value: formatRelativeTime(patient.lastVisit) }),
                           jsx.jsx(DetailRow, { label: "Insurance", value: patient.insurance }),
@@ -518,6 +572,88 @@ function DangerConfirm({ confirm, onCancel, onConfirm }) {
         }),
       ],
     }),
+  });
+}
+
+function SelectField({ label, value, onValueChange, children }) {
+  return jsx.jsxs("label", {
+    className: "block space-y-1.5",
+    children: [
+      jsx.jsx("span", { className: "text-xs font-medium text-foreground", children: label }),
+      jsx.jsxs(Select, {
+        value,
+        onValueChange,
+        children: [
+          jsx.jsx(SelectTrigger, {
+            className: "h-9 w-full bg-surface text-sm",
+            children: jsx.jsx(SelectValue, { placeholder: label }),
+          }),
+          jsx.jsx(SelectContent, { children }),
+        ],
+      }),
+    ],
+  });
+}
+
+function StaffSearchField({ label, value, options, placeholder, onChange }) {
+  const [query, setQuery] = React.useState(value ?? "");
+  const [open, setOpen] = React.useState(false);
+  React.useEffect(() => {
+    setQuery(value ?? "");
+  }, [value]);
+  const matches = options
+    .filter((person) => {
+      const name = staffName(person);
+      const needle = query.trim().toLowerCase();
+      return !needle || `${name} ${person.username}`.toLowerCase().includes(needle);
+    })
+    .slice(0, 7);
+  const selectPerson = (person) => {
+    const name = staffName(person);
+    setQuery(name);
+    onChange(name);
+    setOpen(false);
+  };
+  return jsx.jsxs("label", {
+    className: "block space-y-1.5",
+    children: [
+      jsx.jsx("span", { className: "text-xs font-medium text-foreground", children: label }),
+      jsx.jsxs("div", {
+        className: "patient-combobox",
+        children: [
+          jsx.jsx("input", {
+            value: query,
+            onFocus: () => setOpen(true),
+            onBlur: () => window.setTimeout(() => setOpen(false), 120),
+            onChange: (event) => {
+              setQuery(event.target.value);
+              onChange(event.target.value);
+              setOpen(true);
+            },
+            placeholder,
+            className: "patient-combobox-input",
+          }),
+          open
+            ? jsx.jsx("div", {
+              className: "patient-combobox-menu",
+              role: "listbox",
+              children: matches.length
+                ? matches.map((person) => jsx.jsxs("button", {
+                  type: "button",
+                  className: "patient-combobox-option",
+                  onMouseDown: (event) => event.preventDefault(),
+                  onClick: () => selectPerson(person),
+                  children: [
+                    jsx.jsx("span", { className: "patient-combobox-avatar", children: initials(staffName(person)) }),
+                    jsx.jsxs("span", { className: "min-w-0", children: [jsx.jsx("span", { className: "block truncate text-sm font-medium text-foreground", children: staffName(person) }), jsx.jsx("span", { className: "block truncate text-xs text-muted-foreground", children: `@${person.username}` })] }),
+                  ],
+                }, person.id))
+                : jsx.jsx("div", { className: "patient-combobox-empty", children: "No matching staff" }),
+            })
+            : null,
+        ],
+      }),
+    ],
   });
 }
 
