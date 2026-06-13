@@ -1418,6 +1418,16 @@ main .border-b.border-border.px-8.pb-5.pt-6 > .flex.items-center.gap-2 > :is(but
   height: 16px !important;
 }
 
+header [role="dialog"][aria-label="Notifications"] {
+  width: 360px;
+  max-width: calc(100vw - 32px);
+}
+
+header [role="dialog"][aria-label="Notifications"] > div:nth-child(2) {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
 @media (max-width: 900px) {
   .settings-readonly-value {
     width: 100%;
