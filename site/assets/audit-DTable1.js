@@ -5,6 +5,7 @@ import {
   A as AppShell,
   P as PageHeader,
   S as SearchIcon,
+  L as Link,
 } from "./index-Df4dNtFP.js";
 import { S as Select, a as SelectTrigger, b as SelectValue, c as SelectContent, d as SelectItem } from "./select-9XonwzbX.js";
 import "./index-NYxxxYXH.js";
@@ -51,6 +52,10 @@ const PowerIcon = createIcon("power", [
   ["path", { d: "M18.4 6.6a9 9 0 1 1-12.8 0", key: "power-2" }],
 ]);
 const ChevronRightIcon = createIcon("chevron-right", [["path", { d: "m9 18 6-6-6-6", key: "chevron-1" }]]);
+const XIcon = createIcon("x", [
+  ["path", { d: "M18 6 6 18", key: "x-1" }],
+  ["path", { d: "m6 6 12 12", key: "x-2" }],
+]);
 
 const auditRows = [
   {
@@ -196,6 +201,7 @@ function AuditPage() {
   const [query, setQuery] = React.useState("");
   const [moduleFilter, setModuleFilter] = React.useState("all");
   const [sortBy, setSortBy] = React.useState("recent");
+  const [selectedId, setSelectedId] = React.useState(null);
   const filteredRows = React.useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return auditRows.filter((row) => {
@@ -214,6 +220,7 @@ function AuditPage() {
   }, [filteredRows, sortBy]);
   const totalEvents = moduleFilter === "all" && !query ? 327 : visibleRows.length;
   const pageCount = Math.max(1, Math.ceil(totalEvents / 10));
+  const selectedRow = auditRows.find((row) => row.id === selectedId) ?? null;
 
   return jsx.jsxs(AppShell, {
     children: [
@@ -304,7 +311,7 @@ function AuditPage() {
                               children: "No events match your filters.",
                             }),
                           })
-                        : visibleRows.map((row) => jsx.jsx(AuditRow, { row }, row.id)),
+                        : visibleRows.map((row) => jsx.jsx(AuditRow, { row, onOpen: setSelectedId }, row.id)),
                   }),
                 ],
               }),
@@ -328,14 +335,16 @@ function AuditPage() {
           }),
         ],
       }),
+      jsx.jsx(AuditDetailDrawer, { row: selectedRow, open: !!selectedRow, onOpenChange: (nextOpen) => !nextOpen && setSelectedId(null) }),
     ],
   });
 }
 
-function AuditRow({ row }) {
+function AuditRow({ row, onOpen }) {
   const Icon = row.icon;
   return jsx.jsxs("tr", {
-    className: "audit-row hover:bg-surface/40",
+    onClick: () => onOpen(row.id),
+    className: "audit-row cursor-pointer hover:bg-surface/40",
     children: [
       jsx.jsx("td", {
         className: "audit-action-cell px-4 py-3",
@@ -366,9 +375,96 @@ function AuditRow({ row }) {
       }),
       jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx("span", { className: "audit-module-pill", children: row.module }) }),
       jsx.jsx("td", { className: "px-4 py-3 text-muted-foreground", children: row.timestamp }),
-      jsx.jsx("td", { className: "px-4 py-3 text-right", children: jsx.jsx(ChevronRightIcon, { className: "audit-row-chevron h-4 w-4" }) }),
+      jsx.jsx("td", {
+        className: "audit-chevron-cell px-4 py-3 text-right",
+        children: jsx.jsx("button", {
+          type: "button",
+          onClick: (event) => {
+            event.stopPropagation();
+            onOpen(row.id);
+          },
+          className: "audit-row-open",
+          "aria-label": `Open ${row.action} details`,
+          children: jsx.jsx(ChevronRightIcon, { className: "audit-row-chevron h-4 w-4" }),
+        }),
+      }),
     ],
   });
+}
+
+function AuditDetailDrawer({ row, open, onOpenChange }) {
+  if (!open || !row) return null;
+  const Icon = row.icon;
+  const relatedHref = relatedRoute(row.module);
+  return jsx.jsxs("div", {
+    className: "admin-detail-layer",
+    children: [
+      jsx.jsx("button", { type: "button", className: "admin-detail-backdrop", onClick: () => onOpenChange(false), "aria-label": "Close audit details" }),
+      jsx.jsxs("aside", {
+        className: "admin-detail-sheet",
+        role: "dialog",
+        "aria-modal": "true",
+        "aria-labelledby": "audit-detail-title",
+        children: [
+          jsx.jsxs("div", {
+            className: "admin-detail-header",
+            children: [
+              jsx.jsxs("div", {
+                className: "flex min-w-0 items-start gap-3",
+                children: [
+                  jsx.jsx("span", { className: "audit-detail-icon", children: jsx.jsx(Icon, { className: "h-4 w-4" }) }),
+                  jsx.jsxs("div", { className: "min-w-0 flex-1", children: [jsx.jsx("h2", { id: "audit-detail-title", className: "truncate text-base font-semibold text-foreground", children: row.action }), jsx.jsx("p", { className: "mt-0.5 text-sm text-muted-foreground", children: row.timestamp })] }),
+                ],
+              }),
+              jsx.jsx("button", { type: "button", onClick: () => onOpenChange(false), className: "inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground hover:bg-accent hover:text-foreground", "aria-label": "Close audit details", children: jsx.jsx(XIcon, { className: "h-4 w-4" }) }),
+            ],
+          }),
+          jsx.jsxs("div", {
+            className: "admin-detail-body",
+            children: [
+              jsx.jsx("p", { className: "rounded-lg border border-border bg-surface px-3 py-3 text-sm leading-6 text-muted-foreground", children: row.detail }),
+              jsx.jsxs("div", {
+                className: "overflow-hidden rounded-lg border border-border",
+                children: [
+                  jsx.jsx(DetailRow, { label: "Module", value: row.module }),
+                  jsx.jsx(DetailRow, { label: "Performed by", value: row.performer }),
+                  jsx.jsx(DetailRow, { label: "Role", value: row.performerRole }),
+                  jsx.jsx(DetailRow, { label: "Timestamp", value: row.timestamp }),
+                  jsx.jsx(DetailRow, { label: "Event ID", value: row.id }),
+                ],
+              }),
+              jsx.jsx("div", {
+                className: "rounded-lg border border-border bg-surface px-3 py-3",
+                children: jsx.jsx("p", { className: "text-sm leading-6 text-muted-foreground", children: "Use the related record when this audit event needs a follow-up action. Audit entries themselves remain read-only." }),
+              }),
+            ],
+          }),
+          jsx.jsxs("div", {
+            className: "admin-detail-footer",
+            children: [
+              jsx.jsx("button", { type: "button", onClick: () => onOpenChange(false), className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Close" }),
+              jsx.jsx(Link, { to: relatedHref, className: "inline-flex h-8 items-center rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: "Go to related record" }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
+}
+
+function DetailRow({ label, value }) {
+  return jsx.jsxs("div", {
+    className: "flex items-center justify-between gap-4 border-b border-border px-4 py-3 text-sm last:border-b-0",
+    children: [jsx.jsx("span", { className: "text-muted-foreground", children: label }), jsx.jsx("span", { className: "text-right font-medium text-foreground", children: value })],
+  });
+}
+
+function relatedRoute(moduleName) {
+  if (moduleName === "Department") return "/departments";
+  if (moduleName === "Staff") return "/staff";
+  if (moduleName === "Role") return "/roles";
+  if (moduleName === "Session") return "/settings";
+  return "/audit";
 }
 
 export { AuditPage as component };
