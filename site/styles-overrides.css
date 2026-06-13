@@ -644,17 +644,23 @@ main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 .tex
 }
 
 main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 .font-display.text-3xl {
-  font-size: 1.5rem;
+  font-size: 2rem !important;
   line-height: 1.2;
   letter-spacing: 0;
 }
 
 main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 .rounded-lg.bg-surface {
-  width: 2rem !important;
-  height: 2rem !important;
-  border-radius: var(--ds-radius-card) !important;
-  background: #ffffff;
-  box-shadow: none;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 .rounded-lg.bg-surface svg {
+  width: 1.125rem !important;
+  height: 1.125rem !important;
 }
 
 main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-3 {
@@ -1004,31 +1010,25 @@ main > .space-y-6 > .grid.lg\:grid-cols-3 > section:nth-child(2) a:hover > svg:l
 
 .orbac-metric-icon {
   display: inline-flex;
-  width: 2rem;
-  height: 2rem;
+  width: 1.25rem;
+  height: 1.25rem;
   align-items: center;
   justify-content: center;
-  border-radius: var(--ds-radius-card);
-  border: 1px solid #e6eef7;
-  background: #f3f9ff;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: #2f6f9f;
 }
 
 .orbac-metric-roles .orbac-metric-icon {
-  border-color: #ccefdc;
-  background: #effcf5;
   color: #318157;
 }
 
 .orbac-metric-actions .orbac-metric-icon {
-  border-color: #f4dc78;
-  background: #fffaf0;
   color: #b77a16;
 }
 
 .orbac-metric-objects .orbac-metric-icon {
-  border-color: #e2e2e2;
-  background: #f3f3f3;
   color: #6c6762;
 }
 
@@ -1041,7 +1041,7 @@ main > .space-y-6 > .grid.lg\:grid-cols-3 > section:nth-child(2) a:hover > svg:l
 .orbac-metric-value {
   margin-top: 1rem;
   color: var(--foreground);
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0;
