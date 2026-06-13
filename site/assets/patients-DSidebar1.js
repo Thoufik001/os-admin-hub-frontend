@@ -332,17 +332,19 @@ function PatientPage() {
           }),
         ],
       }),
-      jsx.jsx(PatientDetailSheet, { patient: selected, open: detailOpen, onOpenChange: setDetailOpen, onSave: (nextPatient) => setPatientRecords((records) => records.map((record) => record.id === nextPatient.id ? nextPatient : record)) }),
+      jsx.jsx(PatientDetailSheet, { patient: selected, open: detailOpen, onOpenChange: setDetailOpen, onSave: (nextPatient) => setPatientRecords((records) => records.map((record) => record.id === nextPatient.id ? nextPatient : record)), onDelete: (patientId) => setPatientRecords((records) => records.filter((record) => record.id !== patientId)) }),
     ],
   });
 }
 
-function PatientDetailSheet({ patient, open, onOpenChange, onSave }) {
+function PatientDetailSheet({ patient, open, onOpenChange, onSave, onDelete }) {
   const [editing, setEditing] = React.useState(false);
   const [draft, setDraft] = React.useState(patient);
+  const [confirmAction, setConfirmAction] = React.useState(null);
   React.useEffect(() => {
     setDraft(patient);
     setEditing(false);
+    setConfirmAction(null);
   }, [patient?.id, open]);
   if (!patient) return null;
   const updateDraft = (key, value) => setDraft((current) => ({ ...current, [key]: value }));
@@ -350,6 +352,19 @@ function PatientDetailSheet({ patient, open, onOpenChange, onSave }) {
     onSave(draft);
     setEditing(false);
   };
+  const confirmDanger = () => {
+    if (!confirmAction) return;
+    if (confirmAction.type === "delete") {
+      onDelete?.(patient.id);
+      onOpenChange(false);
+    } else {
+      const nextPatient = { ...draft, recordActive: confirmAction.next };
+      setDraft(nextPatient);
+      onSave(nextPatient);
+    }
+    setConfirmAction(null);
+  };
+  const recordActive = draft?.recordActive !== false;
   return open
     ? jsx.jsxs("div", {
       className: "admin-detail-layer",
@@ -410,6 +425,26 @@ function PatientDetailSheet({ patient, open, onOpenChange, onSave }) {
                           jsx.jsx("textarea", { value: draft.reason, onChange: (event) => updateDraft("reason", event.target.value), rows: 4, className: "w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40" }),
                         ],
                       }),
+                      jsx.jsxs("section", {
+                        className: "danger-zone",
+                        children: [
+                          jsx.jsxs("div", { children: [jsx.jsx("h3", { className: "danger-zone-title", children: "Danger zone" }), jsx.jsx("p", { className: "danger-zone-copy", children: "Record access and deletion require confirmation." })] }),
+                          jsx.jsxs("div", {
+                            className: "danger-row",
+                            children: [
+                              jsx.jsxs("div", { children: [jsx.jsx("div", { className: "danger-row-title", children: "Record active" }), jsx.jsx("p", { className: "danger-row-copy", children: recordActive ? "This patient record is visible in patient workflows." : "This patient record is hidden from active workflows." })] }),
+                              jsx.jsx("button", { type: "button", onClick: () => setConfirmAction({ type: "status", next: !recordActive, title: recordActive ? "Deactivate record" : "Activate record", body: recordActive ? `Deactivate ${patient.name}'s patient record?` : `Reactivate ${patient.name}'s patient record?`, action: recordActive ? "Deactivate" : "Activate" }), className: recordActive ? "danger-switch is-on" : "danger-switch", "aria-pressed": recordActive, children: jsx.jsx("span", {}) }),
+                            ],
+                          }),
+                          jsx.jsxs("div", {
+                            className: "danger-row",
+                            children: [
+                              jsx.jsxs("div", { children: [jsx.jsx("div", { className: "danger-row-title", children: "Delete patient" }), jsx.jsx("p", { className: "danger-row-copy", children: "Remove this patient record from the prototype." })] }),
+                              jsx.jsx("button", { type: "button", onClick: () => setConfirmAction({ type: "delete", title: "Delete patient", body: `Delete ${patient.name}? This removes the patient record from the prototype.`, action: "Delete" }), className: "danger-delete-button", children: "Delete" }),
+                            ],
+                          }),
+                        ],
+                      }),
                     ],
                   }),
                   jsx.jsxs("div", {
@@ -456,11 +491,34 @@ function PatientDetailSheet({ patient, open, onOpenChange, onSave }) {
                   }),
                 ],
               }),
+            confirmAction ? jsx.jsx(DangerConfirm, { confirm: confirmAction, onCancel: () => setConfirmAction(null), onConfirm: confirmDanger }) : null,
           ],
         }),
       ],
     })
     : null;
+}
+
+function DangerConfirm({ confirm, onCancel, onConfirm }) {
+  return jsx.jsx("div", {
+    className: "danger-confirm-layer",
+    children: jsx.jsxs("div", {
+      className: "danger-confirm-card",
+      role: "alertdialog",
+      "aria-modal": "true",
+      children: [
+        jsx.jsx("h3", { children: confirm.title }),
+        jsx.jsx("p", { children: confirm.body }),
+        jsx.jsxs("div", {
+          className: "danger-confirm-actions",
+          children: [
+            jsx.jsx("button", { type: "button", onClick: onCancel, className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Cancel" }),
+            jsx.jsx("button", { type: "button", onClick: onConfirm, className: confirm.type === "delete" ? "h-8 rounded-md bg-destructive px-3 text-xs font-medium text-destructive-foreground hover:bg-destructive/90" : "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: confirm.action }),
+          ],
+        }),
+      ],
+    }),
+  });
 }
 
 function EditableField({ label, value, onChange }) {

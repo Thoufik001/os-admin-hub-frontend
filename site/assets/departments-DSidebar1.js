@@ -160,10 +160,12 @@ function DepartmentDrawer({ open, onOpenChange, editingId }) {
   const department = editingId ? departments.find((item) => item.id === editingId) : null;
   const [draft, setDraft] = React.useState({ code: "", name: "", description: "", headOfDepartmentId: null, status: "active" });
   const [editing, setEditing] = React.useState(false);
+  const [confirmAction, setConfirmAction] = React.useState(null);
   const canEdit = true;
   React.useEffect(() => {
     setDraft({ code: department?.code ?? "", name: department?.name ?? "", description: department?.description ?? "", headOfDepartmentId: department?.headOfDepartmentId ?? null, status: department?.status ?? "active" });
     setEditing(!department);
+    setConfirmAction(null);
   }, [department?.id, open]);
   if (!open) return null;
   const head = staff.find((person) => person.id === (department?.headOfDepartmentId ?? draft.headOfDepartmentId));
@@ -178,6 +180,18 @@ function DepartmentDrawer({ open, onOpenChange, editingId }) {
       onOpenChange(false);
     }
   };
+  const confirmDanger = () => {
+    if (!department || !confirmAction) return;
+    if (confirmAction.type === "delete") {
+      actions.deleteDepartment?.(department.id);
+      onOpenChange(false);
+    } else {
+      actions.setDepartmentStatus?.(department.id, confirmAction.next);
+      setDraft((current) => ({ ...current, status: confirmAction.next }));
+    }
+    setConfirmAction(null);
+  };
+  const active = draft.status === "active";
   return jsx.jsxs("div", {
     className: "admin-detail-layer",
     children: [
@@ -193,7 +207,17 @@ function DepartmentDrawer({ open, onOpenChange, editingId }) {
             jsx.jsx(Field, { label: "Name", children: jsx.jsx(Input, { value: draft.name, onChange: (value) => setDraft({ ...draft, name: value }), placeholder: "Cardiology" }) }),
             jsx.jsx(Field, { label: "Description", children: jsx.jsx("textarea", { value: draft.description, onChange: (event) => setDraft({ ...draft, description: event.target.value }), rows: 3, className: "w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40" }) }),
             jsx.jsx(Field, { label: "Head of Department", children: jsx.jsxs(Select, { value: draft.headOfDepartmentId ?? "none", onValueChange: (value) => setDraft({ ...draft, headOfDepartmentId: value === "none" ? null : value }), children: [jsx.jsx(SelectTrigger, { className: "bg-surface", children: jsx.jsx(SelectValue, {}) }), jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "none", children: "Unassigned" }), staff.filter((person) => person.status === "active").map((person) => jsx.jsx(SelectItem, { value: person.id, children: staffName(person) }, person.id))] })] }) }),
-            jsx.jsx(Field, { label: "Status", children: jsx.jsxs(Select, { value: draft.status, onValueChange: (value) => setDraft({ ...draft, status: value }), children: [jsx.jsx(SelectTrigger, { className: "bg-surface", children: jsx.jsx(SelectValue, {}) }), jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "active", children: "Active" }), jsx.jsx(SelectItem, { value: "archived", children: "Archived" })] })] }) }),
+            department ? jsx.jsxs("section", { className: "danger-zone", children: [
+              jsx.jsxs("div", { children: [jsx.jsx("h3", { className: "danger-zone-title", children: "Danger zone" }), jsx.jsx("p", { className: "danger-zone-copy", children: "Department availability and deletion require confirmation." })] }),
+              jsx.jsxs("div", { className: "danger-row", children: [
+                jsx.jsxs("div", { children: [jsx.jsx("div", { className: "danger-row-title", children: "Department active" }), jsx.jsx("p", { className: "danger-row-copy", children: active ? "This department is available for assignment." : "This department is archived and hidden from active assignment." })] }),
+                jsx.jsx("button", { type: "button", onClick: () => setConfirmAction({ type: "status", next: active ? "archived" : "active", title: active ? "Archive department" : "Restore department", body: active ? `Archive ${department.name}? Staff assignments remain, but it is removed from active workflows.` : `Restore ${department.name} to active workflows?`, action: active ? "Archive" : "Restore" }), className: active ? "danger-switch is-on" : "danger-switch", "aria-pressed": active, children: jsx.jsx("span", {}) }),
+              ] }),
+              jsx.jsxs("div", { className: "danger-row", children: [
+                jsx.jsxs("div", { children: [jsx.jsx("div", { className: "danger-row-title", children: "Delete department" }), jsx.jsx("p", { className: "danger-row-copy", children: `${staffCount} staff assignments will become unassigned.` })] }),
+                jsx.jsx("button", { type: "button", onClick: () => setConfirmAction({ type: "delete", title: "Delete department", body: `Delete ${department.name}? ${staffCount} staff assignments will become unassigned.`, action: "Delete" }), className: "danger-delete-button", children: "Delete" }),
+              ] }),
+            ] }) : null,
           ] }),
           jsx.jsxs("div", { className: "admin-detail-footer", children: [jsx.jsx("button", { onClick: () => department ? setEditing(false) : onOpenChange(false), className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Discard" }), jsx.jsx("button", { onClick: save, className: "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: department ? canEdit ? "Save changes" : "Request approval" : "Create department" })] }),
         ] }) : jsx.jsxs(jsx.Fragment, { children: [
@@ -203,9 +227,21 @@ function DepartmentDrawer({ open, onOpenChange, editingId }) {
           ] }),
           jsx.jsxs("div", { className: "admin-detail-footer", children: [jsx.jsx("button", { onClick: () => onOpenChange(false), className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Close" }), jsx.jsx("button", { onClick: () => setEditing(true), className: "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: "Edit" })] }),
         ] }),
+        confirmAction ? jsx.jsx(DangerConfirm, { confirm: confirmAction, onCancel: () => setConfirmAction(null), onConfirm: confirmDanger }) : null,
       ] }),
     ],
   });
+}
+
+function DangerConfirm({ confirm, onCancel, onConfirm }) {
+  return jsx.jsx("div", { className: "danger-confirm-layer", children: jsx.jsxs("div", { className: "danger-confirm-card", role: "alertdialog", "aria-modal": "true", children: [
+    jsx.jsx("h3", { children: confirm.title }),
+    jsx.jsx("p", { children: confirm.body }),
+    jsx.jsxs("div", { className: "danger-confirm-actions", children: [
+      jsx.jsx("button", { type: "button", onClick: onCancel, className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Cancel" }),
+      jsx.jsx("button", { type: "button", onClick: onConfirm, className: confirm.type === "delete" ? "h-8 rounded-md bg-destructive px-3 text-xs font-medium text-destructive-foreground hover:bg-destructive/90" : "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: confirm.action }),
+    ] }),
+  ] }) });
 }
 
 function DetailRow({ label, value }) {
