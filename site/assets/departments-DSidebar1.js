@@ -33,10 +33,11 @@ const StaffMetricIcon = createIcon("users-round", [
   ["circle", { cx: "10", cy: "8", r: "5", key: "staffm-2" }],
   ["path", { d: "M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3", key: "staffm-3" }],
 ]);
-const ArchiveMetricIcon = createIcon("archive", [
-  ["rect", { width: "20", height: "5", x: "2", y: "3", rx: "1", key: "arch-1" }],
-  ["path", { d: "M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8", key: "arch-2" }],
-  ["path", { d: "M10 12h4", key: "arch-3" }],
+const GapMetricIcon = createIcon("user-x", [
+  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "gap-1" }],
+  ["circle", { cx: "9", cy: "7", r: "4", key: "gap-2" }],
+  ["path", { d: "m17 8 5 5", key: "gap-3" }],
+  ["path", { d: "m22 8-5 5", key: "gap-4" }],
 ]);
 const EditIcon = createIcon("square-pen", [
   ["path", { d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7", key: "edit-1" }],
@@ -71,8 +72,10 @@ function DepartmentsPage() {
   const metrics = React.useMemo(() => ({
     total: departments.length,
     active: departments.filter((item) => item.status === "active").length,
-    headless: departments.filter((item) => !item.headOfDepartmentId).length,
-    staffed: departments.filter((item) => staff.some((person) => person.departmentId === item.id)).length,
+    archived: departments.filter((item) => item.status === "archived").length,
+    headless: departments.filter((item) => item.status === "active" && !item.headOfDepartmentId).length,
+    headed: departments.filter((item) => item.status === "active" && item.headOfDepartmentId).length,
+    unstaffed: departments.filter((item) => item.status === "active" && !staff.some((person) => person.departmentId === item.id && person.status === "active")).length,
   }), [departments, staff]);
   const visible = React.useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -110,10 +113,10 @@ function DepartmentsPage() {
         className: "orbac-page space-y-4 px-8 py-6",
         children: [
           jsx.jsxs("div", { className: "orbac-metrics-grid", children: [
-            jsx.jsx(MetricCard, { icon: DeptMetricIcon, label: "Departments", value: metrics.total, hint: "Total units", tone: "rules" }),
-            jsx.jsx(MetricCard, { icon: StaffMetricIcon, label: "Active", value: metrics.active, hint: "Open units", tone: "roles" }),
-            jsx.jsx(MetricCard, { icon: HeadMetricIcon, label: "No head", value: metrics.headless, hint: "Needs owner", tone: "actions" }),
-            jsx.jsx(MetricCard, { icon: ArchiveMetricIcon, label: "Staffed", value: metrics.staffed, hint: "Has members", tone: "objects" }),
+            jsx.jsx(MetricCard, { icon: DeptMetricIcon, label: "Total departments", value: metrics.total, hint: `${metrics.active} active · ${metrics.archived} archived`, tone: "rules" }),
+            jsx.jsx(MetricCard, { icon: StaffMetricIcon, label: "Operational units", value: metrics.active, hint: "Available for staff assignment", tone: "roles" }),
+            jsx.jsx(MetricCard, { icon: HeadMetricIcon, label: "Head coverage", value: `${metrics.headed}/${metrics.active}`, hint: metrics.headless ? `${metrics.headless} active ${metrics.headless === 1 ? "unit needs" : "units need"} a head` : "All active units have a head", tone: "actions" }),
+            jsx.jsx(MetricCard, { icon: GapMetricIcon, label: "Staffing gaps", value: metrics.unstaffed, hint: metrics.unstaffed ? "Active units with no active staff" : "All active units have staff", tone: "objects" }),
           ] }),
           jsx.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
             jsx.jsxs("div", { className: "relative w-72", children: [jsx.jsx(SearchIcon, { className: "pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" }), jsx.jsx("input", { value: query, onChange: (event) => setQuery(event.target.value), placeholder: "Search departments", className: "h-8 w-full rounded-md border border-border bg-surface pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40" })] }),
