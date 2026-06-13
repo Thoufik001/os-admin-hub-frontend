@@ -291,12 +291,28 @@ main kbd {
 }
 
 body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > header button:has(kbd) kbd {
-  margin-left: 0.75rem !important;
+  margin-left: auto !important;
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
   color: var(--muted-foreground);
+}
+
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > header button:has(kbd) {
+  width: 20rem !important;
+  height: 2.5rem !important;
+  justify-content: flex-start !important;
+  border-radius: var(--ds-radius-control) !important;
+  padding: 0 0.75rem !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.2;
+}
+
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > header button:has(kbd) > span {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
 }
 
 body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > header button:has(kbd) kbd svg {
@@ -498,6 +514,11 @@ body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sideba
   content: "3";
   background: #fff0f3;
   color: #df4d64;
+}
+
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(7)::after {
+  display: none !important;
+  content: none !important;
 }
 
 body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar nav a:nth-child(5) span,
@@ -2601,16 +2622,45 @@ main .border-b.border-border.px-8.pb-5.pt-6 > .flex.items-center.gap-2 > :is(but
 }
 
 header [role="dialog"][aria-label="Notifications"] {
-  width: 360px;
-  max-width: calc(100vw - 32px);
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: auto !important;
+  z-index: 80 !important;
+  display: flex !important;
+  width: min(420px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px);
+  height: 100svh !important;
+  flex-direction: column;
+  border-top: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 0 !important;
+  background: var(--card) !important;
+  box-shadow: -24px 0 60px rgba(15, 23, 42, 0.18) !important;
 }
 
 header [role="dialog"][aria-label="Notifications"] > div:nth-child(2) {
-  max-height: 320px;
+  flex: 1 1 auto;
+  max-height: none;
   overflow-y: auto;
 }
 
+header [role="dialog"][aria-label="Notifications"] > div:first-child {
+  min-height: 5rem;
+  padding: 1rem 1.25rem !important;
+}
+
+header [role="dialog"][aria-label="Notifications"] > div:last-child {
+  padding: 0.875rem 1.25rem !important;
+}
+
 @media (max-width: 900px) {
+  body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > header button:has(kbd) {
+    width: 13rem !important;
+  }
+
   .settings-segmented-wrap {
     margin-top: -0.125rem !important;
     padding: 0.625rem 0 !important;
