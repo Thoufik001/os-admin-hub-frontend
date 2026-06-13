@@ -1407,6 +1407,17 @@ main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 > .g
   color: var(--destructive, #d63b4a);
 }
 
+main .border-b.border-border.px-8.pb-5.pt-6 > .flex.items-center.gap-2 > :is(button, a) {
+  min-height: 40px !important;
+  padding-inline: 16px !important;
+  font-size: 13px !important;
+}
+
+main .border-b.border-border.px-8.pb-5.pt-6 > .flex.items-center.gap-2 > :is(button, a) svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
 @media (max-width: 900px) {
   .settings-readonly-value {
     width: 100%;
