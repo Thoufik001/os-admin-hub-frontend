@@ -282,8 +282,8 @@ function O() {
                             jsx.jsx("td", {
                               className: "px-4 py-3",
                               children: jsx.jsxs("span", {
-                                className: "orbac-role-pill",
-                                children: [jsx.jsx(ShieldIcon, { className: "orbac-role-icon" }), policy.role],
+                                className: "staff-role-pill",
+                                children: [jsx.jsx(ShieldIcon, { className: "staff-role-pill-icon" }), policy.role],
                               }),
                             }),
                             jsx.jsx("td", {
