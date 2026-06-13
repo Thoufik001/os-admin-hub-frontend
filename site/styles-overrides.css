@@ -1833,7 +1833,7 @@ main table td .rounded-full.bg-primary\/20 {
 
 .orbac-policy-table-inner th:nth-child(6) {
   width: 7.5rem;
-  text-align: right;
+  text-align: left;
 }
 
 .orbac-policy-table-inner td {
@@ -1886,7 +1886,7 @@ main table td .rounded-full.bg-primary\/20 {
 }
 
 .orbac-policy-table-inner td:nth-child(6) {
-  text-align: right;
+  text-align: left;
   white-space: nowrap;
 }
 
