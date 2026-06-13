@@ -2,8 +2,6 @@ import {
   c as createIcon,
   r as React,
   j as jsx,
-  A as AppShell,
-  P as PageHeader,
   n as ShieldIcon,
   S as SearchIcon,
 } from "./index-Df4dNtFP.js";
@@ -87,16 +85,30 @@ const RefreshIcon = createIcon("refresh-cw", [
   ["path", { d: "M3 12a9 9 0 0 1 9-9 9.8 9.8 0 0 1 6.7 2.7L21 8", key: "refresh-3" }],
   ["path", { d: "M16 8h5V3", key: "refresh-4" }],
 ]);
-
 const roleIcons = {
   Staff: UserIcon,
   Owner: ShieldIcon,
+  "Hospital Admin": ShieldIcon,
   "Front Desk": ClipboardIcon,
   Doctor: StethoscopeIcon,
   Manager: BriefcaseIcon,
   Nurse: HeartPulseIcon,
   Pharmacist: PillIcon,
 };
+
+const catalogSections = [
+  ["foundations", "Foundations"],
+  ["colors", "Colors"],
+  ["buttons", "Buttons"],
+  ["forms", "Forms"],
+  ["tags", "Tags"],
+  ["avatars", "Avatars"],
+  ["person-info", "Person info"],
+  ["metrics", "Metrics"],
+  ["tables", "Tables"],
+  ["side-panels", "Side panels"],
+  ["role-matrix", "Role matrix"],
+];
 
 function RoleTag({ role, empty = false, more }) {
   if (more) {
@@ -112,7 +124,24 @@ function RoleTag({ role, empty = false, more }) {
 function PatientStatusTag({ tone, icon: Icon, children }) {
   return jsx.jsxs("span", {
     className: `patient-status patient-status-${tone}`,
-    children: [jsx.jsx(Icon, { className: "h-3.5 w-3.5" }), children],
+    children: [jsx.jsx(Icon, { className: "patient-status-icon" }), children],
+  });
+}
+
+function Avatar({ initials, size = "md" }) {
+  return jsx.jsx("span", { className: `ds-avatar ds-avatar-${size}`, children: initials });
+}
+
+function PersonInfo({ initials, name, meta }) {
+  return jsx.jsxs("div", {
+    className: "ds-person-item",
+    children: [
+      jsx.jsx(Avatar, { initials }),
+      jsx.jsxs("span", {
+        className: "ds-person-copy",
+        children: [jsx.jsx("strong", { children: name }), jsx.jsx("span", { children: meta })],
+      }),
+    ],
   });
 }
 
@@ -133,8 +162,9 @@ function MetricCard({ icon: Icon, label, value, hint, tone }) {
   });
 }
 
-function Section({ title, description, children }) {
+function Section({ id, title, description, children }) {
   return jsx.jsxs("section", {
+    id,
     className: "ds-section",
     children: [
       jsx.jsxs("header", {
@@ -159,219 +189,350 @@ function ComponentRow({ label, children }) {
   });
 }
 
-function DesignSystemPage() {
-  const [filter, setFilter] = React.useState("all");
-  const [sort, setSort] = React.useState("recent");
+function ToggleSample({ checked = false }) {
+  return jsx.jsx("button", {
+    className: checked ? "ds-toggle ds-toggle-on" : "ds-toggle",
+    type: "button",
+    "aria-pressed": checked,
+    children: jsx.jsx("span", { className: "ds-toggle-thumb" }),
+  });
+}
 
-  return jsx.jsxs(AppShell, {
+function DesignSystemPage() {
+  const [statusFilter, setStatusFilter] = React.useState("all");
+  const [departmentFilter, setDepartmentFilter] = React.useState("all-departments");
+  const [sort, setSort] = React.useState("recent");
+  const [timezone, setTimezone] = React.useState("asia-kolkata");
+  const [roleScope, setRoleScope] = React.useState("owner");
+
+  return jsx.jsxs("main", {
+    className: "ds-standalone-shell",
     children: [
-      jsx.jsx(PageHeader, {
-        title: "Design System",
-        description: "A shared component catalog for the admin dashboard.",
-        actions: jsx.jsxs("button", {
-          className: "ds-button ds-button-primary",
-          children: [jsx.jsx(EditIcon, { className: "h-4 w-4" }), "Update guide"],
-        }),
+      jsx.jsxs("header", {
+        className: "ds-standalone-header",
+        children: [
+          jsx.jsxs("div", {
+            children: [
+              jsx.jsx("span", { className: "ds-token-kicker", children: "ZyephrOS Admin" }),
+              jsx.jsx("h1", { children: "Component system" }),
+              jsx.jsx("p", { children: "A developer-facing catalog for global UI rules, atoms, molecules and dashboard patterns." }),
+            ],
+          }),
+          jsx.jsx("a", { className: "ds-button ds-button-secondary", href: "/", children: "Back to app" }),
+        ],
       }),
       jsx.jsxs("div", {
-        className: "design-system-page px-8 py-6",
+        className: "design-system-page",
         children: [
-          jsx.jsx(Section, {
-            title: "Foundations",
-            description: "Core decisions all pages should reuse before custom layout.",
-            children: jsx.jsxs("div", {
-              className: "ds-token-grid",
-              children: [
-                jsx.jsxs("div", { className: "ds-token-card", children: [jsx.jsx("span", { className: "ds-token-kicker", children: "Typography" }), jsx.jsx("strong", { children: "SF Pro / 13px base" }), jsx.jsx("p", { children: "12, 13, 14, 16, 18, and 24px only." })] }),
-                jsx.jsxs("div", { className: "ds-token-card", children: [jsx.jsx("span", { className: "ds-token-kicker", children: "Radius" }), jsx.jsx("strong", { children: "8px cards, 6px controls" }), jsx.jsx("p", { children: "Tables, drawers, filters, buttons and tags share the same curve." })] }),
-                jsx.jsxs("div", { className: "ds-token-card", children: [jsx.jsx("span", { className: "ds-token-kicker", children: "Spacing" }), jsx.jsx("strong", { children: "8px rhythm" }), jsx.jsx("p", { children: "Toolbars use 8px gaps, page gutters use 32px." })] }),
-              ],
-            }),
+          jsx.jsxs("aside", {
+            className: "ds-nav",
+            "aria-label": "Component sections",
+            children: [
+              jsx.jsx("div", { className: "ds-nav-title", children: "Components" }),
+              catalogSections.map(([id, label]) => jsx.jsx("a", { href: `#${id}`, children: label }, id)),
+            ],
           }),
-          jsx.jsx(Section, {
-            title: "Color Tokens",
-            description: "Use tokens instead of page-specific shades.",
-            children: jsx.jsxs("div", {
-              className: "ds-swatch-grid",
-              children: [
-                jsx.jsx(ColorSwatch, { name: "Strong", value: "#292929", variable: "--foreground" }),
-                jsx.jsx(ColorSwatch, { name: "Default", value: "#5D5D5D", variable: "--muted-foreground" }),
-                jsx.jsx(ColorSwatch, { name: "Subtle", value: "#7F7F7F", variable: "--muted-foreground" }),
-                jsx.jsx(ColorSwatch, { name: "Selected", value: "#F5F5F5", variable: "--accent" }),
-                jsx.jsx(ColorSwatch, { name: "Border", value: "#F2F2F2", variable: "--border" }),
-                jsx.jsx(ColorSwatch, { name: "Primary", value: "#5B5CE2", variable: "--primary" }),
-              ],
-            }),
-          }),
-          jsx.jsx(Section, {
-            title: "Buttons",
-            description: "One button system with variants for primary, secondary, icon and danger actions.",
-            children: jsx.jsxs("div", {
-              className: "ds-stack",
-              children: [
-                jsx.jsx(ComponentRow, {
-                  label: "Primary",
-                  children: jsx.jsxs("button", { className: "ds-button ds-button-primary", children: [jsx.jsx(UserPlusIcon, { className: "h-4 w-4" }), "Add staff"] }),
-                }),
-                jsx.jsx(ComponentRow, {
-                  label: "Secondary",
-                  children: jsx.jsxs("button", { className: "ds-button ds-button-secondary", children: [jsx.jsx(EditIcon, { className: "h-4 w-4" }), "Edit"] }),
-                }),
-                jsx.jsx(ComponentRow, {
-                  label: "Icon",
-                  children: jsx.jsxs("div", {
-                    className: "ds-inline",
-                    children: [
-                      jsx.jsx("button", { className: "ds-icon-button", "aria-label": "Edit", children: jsx.jsx(EditIcon, { className: "h-4 w-4" }) }),
-                      jsx.jsx("button", { className: "ds-icon-button", "aria-label": "Open", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) }),
-                    ],
-                  }),
-                }),
-                jsx.jsx(ComponentRow, {
-                  label: "Danger",
-                  children: jsx.jsxs("button", { className: "ds-button ds-button-danger", children: [jsx.jsx(TrashIcon, { className: "h-4 w-4" }), "Delete"] }),
-                }),
-              ],
-            }),
-          }),
-          jsx.jsx(Section, {
-            title: "Search And Filters",
-            description: "Search, filter and sort controls share height, radius, border, and typography.",
-            children: jsx.jsxs("div", {
-              className: "ds-toolbar-demo",
-              children: [
-                jsx.jsxs("div", {
-                  className: "ds-search-control",
+          jsx.jsxs("div", {
+            className: "ds-content",
+            children: [
+              jsx.jsx(Section, {
+                id: "foundations",
+                title: "Foundations",
+                description: "Shared decisions before page-level layout. Pages should compose from these rules, not create one-off variants.",
+                children: jsx.jsxs("div", {
+                  className: "ds-token-grid",
                   children: [
-                    jsx.jsx(SearchIcon, { className: "h-4 w-4 text-muted-foreground" }),
-                    jsx.jsx("input", { placeholder: "Search by name, username, or email", readOnly: true }),
+                    jsx.jsxs("div", { className: "ds-token-card", children: [jsx.jsx("span", { className: "ds-token-kicker", children: "Typography" }), jsx.jsx("strong", { children: "SF Pro / 13px base" }), jsx.jsx("p", { children: "Allowed sizes: 12, 13, 14, 16, 18 and 24px." })] }),
+                    jsx.jsxs("div", { className: "ds-token-card", children: [jsx.jsx("span", { className: "ds-token-kicker", children: "Radius" }), jsx.jsx("strong", { children: "8px cards, 6px controls" }), jsx.jsx("p", { children: "Tables, drawers, filters, buttons and tags share the same curve." })] }),
+                    jsx.jsxs("div", { className: "ds-token-card", children: [jsx.jsx("span", { className: "ds-token-kicker", children: "Spacing" }), jsx.jsx("strong", { children: "8px rhythm" }), jsx.jsx("p", { children: "Toolbars use 8px gaps, page gutters use 32px." })] }),
                   ],
                 }),
-                jsx.jsxs(Select, {
-                  value: filter,
-                  onValueChange: setFilter,
+              }),
+              jsx.jsx(Section, {
+                id: "colors",
+                title: "Colors",
+                description: "Use tokens instead of page-specific shades.",
+                children: jsx.jsxs("div", {
+                  className: "ds-swatch-grid",
                   children: [
-                    jsx.jsx(SelectTrigger, { className: "h-8 w-[180px] bg-surface text-xs", children: jsx.jsx(SelectValue, {}) }),
-                    jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "all", children: "All (54)" }), jsx.jsx(SelectItem, { value: "active", children: "Active (24)" }), jsx.jsx(SelectItem, { value: "inactive", children: "Inactive (4)" })] }),
+                    jsx.jsx(ColorSwatch, { name: "Strong", value: "#292929", variable: "--foreground" }),
+                    jsx.jsx(ColorSwatch, { name: "Default", value: "#5D5D5D", variable: "--muted-foreground" }),
+                    jsx.jsx(ColorSwatch, { name: "Subtle", value: "#7F7F7F", variable: "--muted-foreground" }),
+                    jsx.jsx(ColorSwatch, { name: "Selected", value: "#F5F5F5", variable: "--accent" }),
+                    jsx.jsx(ColorSwatch, { name: "Border", value: "#F2F2F2", variable: "--border" }),
+                    jsx.jsx(ColorSwatch, { name: "Primary", value: "#5B5CE2", variable: "--primary" }),
                   ],
                 }),
-                jsx.jsxs(Select, {
-                  value: sort,
-                  onValueChange: setSort,
+              }),
+              jsx.jsx(Section, {
+                id: "buttons",
+                title: "Buttons",
+                description: "One button system with primary, secondary, icon and danger variants.",
+                children: jsx.jsxs("div", {
+                  className: "ds-stack",
                   children: [
-                    jsx.jsx(SelectTrigger, { className: "h-8 w-[150px] bg-surface text-xs", children: jsx.jsx(SelectValue, {}) }),
-                    jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "recent", children: "Sort: Recent" }), jsx.jsx(SelectItem, { value: "name", children: "Sort: Name" })] }),
-                  ],
-                }),
-              ],
-            }),
-          }),
-          jsx.jsx(Section, {
-            title: "Tags",
-            description: "Role, account, patient and permission tags must keep their shared shape and sizing.",
-            children: jsx.jsxs("div", {
-              className: "ds-stack",
-              children: [
-                jsx.jsx(ComponentRow, {
-                  label: "Roles",
-                  children: jsx.jsxs("div", { className: "staff-role-list ds-open-list", children: [jsx.jsx(RoleTag, { role: "Staff" }), jsx.jsx(RoleTag, { role: "Owner" }), jsx.jsx(RoleTag, { role: "Front Desk" }), jsx.jsx(RoleTag, { role: "Doctor" }), jsx.jsx(RoleTag, { role: "Manager" }), jsx.jsx(RoleTag, { role: "Nurse" }), jsx.jsx(RoleTag, { role: "Pharmacist" }), jsx.jsx(RoleTag, { role: "No role", empty: true }), jsx.jsx(RoleTag, { more: 2 })] }),
-                }),
-                jsx.jsx(ComponentRow, {
-                  label: "Account",
-                  children: jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsx(StatusPill, { tone: "active", children: "Active" }), jsx.jsx(StatusPill, { tone: "inactive", children: "Inactive" }), jsx.jsx(StatusPill, { tone: "invited", children: "Invited" })] }),
-                }),
-                jsx.jsx(ComponentRow, {
-                  label: "Patient",
-                  children: jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsx(PatientStatusTag, { tone: "in-care", icon: HeartPulseIcon, children: "In care" }), jsx.jsx(PatientStatusTag, { tone: "critical", icon: CircleMinusIcon, children: "Critical" }), jsx.jsx(PatientStatusTag, { tone: "scheduled", icon: CalendarIcon, children: "Scheduled" }), jsx.jsx(PatientStatusTag, { tone: "sent-lab", icon: FlaskIcon, children: "Sent for lab" }), jsx.jsx(PatientStatusTag, { tone: "follow-up", icon: RefreshIcon, children: "Follow-up" }), jsx.jsx(PatientStatusTag, { tone: "completed", icon: CheckIcon, children: "Completed" })] }),
-                }),
-                jsx.jsx(ComponentRow, {
-                  label: "Permissions",
-                  children: jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsx(StatusPill, { tone: "success", children: "Allowed" }), jsx.jsx(StatusPill, { tone: "warning", children: "Limited" }), jsx.jsx(StatusPill, { tone: "neutral", children: "Denied" })] }),
-                }),
-              ],
-            }),
-          }),
-          jsx.jsx(Section, {
-            title: "Metrics",
-            description: "All metric bento cards share this structure: icon and label, number, short decision hint.",
-            children: jsx.jsxs("div", {
-              className: "orbac-metrics-grid",
-              children: [
-                jsx.jsx(MetricCard, { icon: UserIcon, label: "Staff", value: "15", hint: "Total accounts", tone: "rules" }),
-                jsx.jsx(MetricCard, { icon: ShieldIcon, label: "Active", value: "11", hint: "Can sign in", tone: "roles" }),
-                jsx.jsx(MetricCard, { icon: BuildingIcon, label: "Departments", value: "7", hint: "Care units", tone: "actions" }),
-                jsx.jsx(MetricCard, { icon: CircleMinusIcon, label: "No role", value: "2", hint: "Needs access", tone: "objects" }),
-              ],
-            }),
-          }),
-          jsx.jsx(Section, {
-            title: "Tables",
-            description: "Table rows, avatars, chevron buttons and footer pagination should match this pattern.",
-            children: jsx.jsxs("div", {
-              className: "ds-table-card",
-              children: [
-                jsx.jsxs("table", {
-                  className: "w-full text-sm",
-                  children: [
-                    jsx.jsx("thead", {
-                      children: jsx.jsxs("tr", {
-                        className: "border-b border-border bg-surface/50 text-left text-xs uppercase tracking-wider text-muted-foreground",
+                    jsx.jsx(ComponentRow, {
+                      label: "Primary",
+                      children: jsx.jsxs("button", { className: "ds-button ds-button-primary", children: [jsx.jsx(UserPlusIcon, { className: "h-4 w-4" }), "Add staff"] }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Secondary",
+                      children: jsx.jsxs("button", { className: "ds-button ds-button-secondary", children: [jsx.jsx(EditIcon, { className: "h-4 w-4" }), "Edit"] }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Icon",
+                      children: jsx.jsxs("div", {
+                        className: "ds-inline",
                         children: [
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Name" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Department" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Roles" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Status" }),
-                          jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Action" }),
+                          jsx.jsx("button", { className: "ds-icon-button", "aria-label": "Edit", children: jsx.jsx(EditIcon, { className: "h-4 w-4" }) }),
+                          jsx.jsx("button", { className: "ds-icon-button", "aria-label": "Open", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) }),
                         ],
                       }),
                     }),
-                    jsx.jsxs("tbody", {
-                      className: "divide-y divide-border",
-                      children: [
-                        jsx.jsx(TableRow, { initials: "AR", name: "Anita Rao", meta: "anita.rao@zyephr.health", department: "Administration", roles: ["Owner"], status: "active" }),
-                        jsx.jsx(TableRow, { initials: "ML", name: "Marcus Lee", meta: "marcus.lee@zyephr.health", department: "Cardiology", roles: ["Doctor", "Hospital Admin"], status: "active" }),
-                        jsx.jsx(TableRow, { initials: "DA", name: "Diego Alves", meta: "diego.alves@zyephr.health", department: "Pediatrics", roles: [], status: "invited" }),
-                      ],
+                    jsx.jsx(ComponentRow, {
+                      label: "Danger",
+                      children: jsx.jsxs("button", { className: "ds-button ds-button-danger", children: [jsx.jsx(TrashIcon, { className: "h-4 w-4" }), "Delete"] }),
                     }),
                   ],
                 }),
-                jsx.jsxs("div", {
-                  className: "admin-table-footer",
-                  children: [
-                    jsx.jsx("span", { children: "Showing 1-3 of 54 records" }),
-                    jsx.jsxs("div", {
-                      className: "admin-table-pagination",
-                      children: [
-                        jsx.jsx("button", { type: "button", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }),
-                        jsx.jsx("span", { children: "1 / 18" }),
-                        jsx.jsx("button", { type: "button", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) }),
-                      ],
-                    }),
-                  ],
-                }),
-              ],
-            }),
-          }),
-          jsx.jsx(Section, {
-            title: "Sidebars",
-            description: "Staff, departments, patients, audit details and settings should all follow this read/edit/danger pattern.",
-            children: jsx.jsx("div", {
-              className: "ds-drawer-demo",
-              children: jsx.jsxs("aside", {
-                className: "ds-drawer-panel",
-                children: [
-                  jsx.jsxs("header", {
-                    className: "ds-drawer-header",
-                    children: [
-                      jsx.jsxs("div", { children: [jsx.jsx("h3", { children: "Department details" }), jsx.jsx("p", { children: "Cardiology" })] }),
-                      jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsxs("button", { className: "ds-button ds-button-secondary", children: [jsx.jsx(EditIcon, { className: "h-4 w-4" }), "Edit"] }), jsx.jsx("button", { className: "ds-icon-button", children: jsx.jsx(XIcon, { className: "h-4 w-4" }) })] }),
-                    ],
-                  }),
-                  jsx.jsxs("div", { className: "ds-drawer-body", children: [jsx.jsx(DetailLine, { label: "Code", value: "CARD" }), jsx.jsx(DetailLine, { label: "Head of Department", value: "Marcus Lee" }), jsx.jsx(DetailLine, { label: "Staff", value: "3 members" })] }),
-                  jsx.jsxs("section", { className: "ds-danger-zone", children: [jsx.jsx("h4", { children: "Danger zone" }), jsx.jsx("p", { children: "Changing active state or deleting a record requires confirmation." }), jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsxs("button", { className: "ds-button ds-button-secondary", children: [jsx.jsx(CircleMinusIcon, { className: "h-4 w-4" }), "Deactivate"] }), jsx.jsxs("button", { className: "ds-button ds-button-danger", children: [jsx.jsx(TrashIcon, { className: "h-4 w-4" }), "Delete"] })] })] }),
-                ],
               }),
-            }),
+              jsx.jsx(Section, {
+                id: "forms",
+                title: "Forms",
+                description: "Search, filters, dropdowns, inputs, text areas and switches share one control scale.",
+                children: jsx.jsxs("div", {
+                  className: "ds-stack",
+                  children: [
+                    jsx.jsx(ComponentRow, {
+                      label: "Toolbar",
+                      children: jsx.jsxs("div", {
+                        className: "ds-toolbar-demo",
+                        children: [
+                          jsx.jsxs("div", {
+                            className: "ds-search-control",
+                            children: [
+                              jsx.jsx(SearchIcon, { className: "h-4 w-4 text-muted-foreground" }),
+                              jsx.jsx("input", { placeholder: "Search by name, username, or email", readOnly: true }),
+                            ],
+                          }),
+                          jsx.jsxs(Select, {
+                            value: statusFilter,
+                            onValueChange: setStatusFilter,
+                            children: [
+                              jsx.jsx(SelectTrigger, { className: "h-8 w-[180px] bg-surface text-xs", children: jsx.jsx(SelectValue, {}) }),
+                              jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "all", children: "All (54)" }), jsx.jsx(SelectItem, { value: "active", children: "Active (24)" }), jsx.jsx(SelectItem, { value: "inactive", children: "Inactive (4)" }), jsx.jsx(SelectItem, { value: "invited", children: "Invited (2)" })] }),
+                            ],
+                          }),
+                          jsx.jsxs(Select, {
+                            value: departmentFilter,
+                            onValueChange: setDepartmentFilter,
+                            children: [
+                              jsx.jsx(SelectTrigger, { className: "h-8 w-[190px] bg-surface text-xs", children: jsx.jsx(SelectValue, {}) }),
+                              jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "all-departments", children: "All departments (7)" }), jsx.jsx(SelectItem, { value: "cardiology", children: "Cardiology (8)" }), jsx.jsx(SelectItem, { value: "pediatrics", children: "Pediatrics (6)" })] }),
+                            ],
+                          }),
+                          jsx.jsxs(Select, {
+                            value: sort,
+                            onValueChange: setSort,
+                            children: [
+                              jsx.jsx(SelectTrigger, { className: "h-8 w-[150px] bg-surface text-xs", children: jsx.jsx(SelectValue, {}) }),
+                              jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "recent", children: "Sort: Recent" }), jsx.jsx(SelectItem, { value: "name", children: "Sort: Name" })] }),
+                            ],
+                          }),
+                        ],
+                      }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Inputs",
+                      children: jsx.jsxs("div", {
+                        className: "ds-field-grid",
+                        children: [
+                          jsx.jsxs("label", { className: "ds-field", children: [jsx.jsx("span", { children: "Text input" }), jsx.jsx("input", { className: "ds-input", defaultValue: "Zyephr Health", readOnly: true })] }),
+                          jsx.jsxs("label", { className: "ds-field", children: [jsx.jsx("span", { children: "Search select" }), jsx.jsx("input", { className: "ds-input", defaultValue: "Marcus Lee", readOnly: true })] }),
+                        ],
+                      }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Dropdown",
+                      children: jsx.jsxs(Select, {
+                        value: timezone,
+                        onValueChange: setTimezone,
+                        children: [
+                          jsx.jsx(SelectTrigger, { className: "h-10 w-[260px] bg-surface text-sm", children: jsx.jsx(SelectValue, {}) }),
+                          jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "asia-kolkata", children: "Asia/Kolkata" }), jsx.jsx(SelectItem, { value: "utc", children: "UTC" }), jsx.jsx(SelectItem, { value: "america-new-york", children: "America/New York" })] }),
+                        ],
+                      }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Textarea",
+                      children: jsx.jsxs("label", { className: "ds-field ds-field-wide", children: [jsx.jsx("span", { children: "Audit note" }), jsx.jsx("textarea", { className: "ds-textarea", defaultValue: "Changed permissions after owner approval.", readOnly: true })] }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Switch",
+                      children: jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsx(ToggleSample, { checked: true }), jsx.jsx(ToggleSample, {})] }),
+                    }),
+                  ],
+                }),
+              }),
+              jsx.jsx(Section, {
+                id: "tags",
+                title: "Tags",
+                description: "Tags use the same 28px height everywhere. Role tags keep role icons; status tags use text only unless the domain needs an icon.",
+                children: jsx.jsxs("div", {
+                  className: "ds-stack",
+                  children: [
+                    jsx.jsx(ComponentRow, {
+                      label: "Roles",
+                      children: jsx.jsxs("div", { className: "staff-role-list ds-open-list", children: [jsx.jsx(RoleTag, { role: "Staff" }), jsx.jsx(RoleTag, { role: "Owner" }), jsx.jsx(RoleTag, { role: "Hospital Admin" }), jsx.jsx(RoleTag, { role: "Front Desk" }), jsx.jsx(RoleTag, { role: "Doctor" }), jsx.jsx(RoleTag, { role: "Manager" }), jsx.jsx(RoleTag, { role: "Nurse" }), jsx.jsx(RoleTag, { role: "Pharmacist" }), jsx.jsx(RoleTag, { role: "No role", empty: true }), jsx.jsx(RoleTag, { more: 2 })] }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Account",
+                      children: jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsx(StatusPill, { tone: "active", className: "ds-tag", children: "Active" }), jsx.jsx(StatusPill, { tone: "inactive", className: "ds-tag", children: "Inactive" }), jsx.jsx(StatusPill, { tone: "invited", className: "ds-tag", children: "Invited" })] }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Patient",
+                      children: jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsx(PatientStatusTag, { tone: "in-care", icon: HeartPulseIcon, children: "In care" }), jsx.jsx(PatientStatusTag, { tone: "critical", icon: CircleMinusIcon, children: "Critical" }), jsx.jsx(PatientStatusTag, { tone: "scheduled", icon: CalendarIcon, children: "Scheduled" }), jsx.jsx(PatientStatusTag, { tone: "sent-lab", icon: FlaskIcon, children: "Sent for lab" }), jsx.jsx(PatientStatusTag, { tone: "follow-up", icon: RefreshIcon, children: "Follow-up" }), jsx.jsx(PatientStatusTag, { tone: "completed", icon: CheckIcon, children: "Completed" })] }),
+                    }),
+                    jsx.jsx(ComponentRow, {
+                      label: "Permissions",
+                      children: jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsx(StatusPill, { tone: "success", className: "ds-tag", children: "Allowed" }), jsx.jsx(StatusPill, { tone: "warning", className: "ds-tag", children: "Limited" }), jsx.jsx(StatusPill, { tone: "neutral", className: "ds-tag", children: "Denied" })] }),
+                    }),
+                  ],
+                }),
+              }),
+              jsx.jsx(Section, {
+                id: "avatars",
+                title: "Avatars",
+                description: "People avatars stay circular, same fill, same weight. Size changes only by named variant.",
+                children: jsx.jsxs("div", {
+                  className: "ds-inline",
+                  children: [jsx.jsx(Avatar, { initials: "AR", size: "sm" }), jsx.jsx(Avatar, { initials: "ML" }), jsx.jsx(Avatar, { initials: "SA", size: "lg" }), jsx.jsx(Avatar, { initials: "?", size: "md" })],
+                }),
+              }),
+              jsx.jsx(Section, {
+                id: "person-info",
+                title: "Person info",
+                description: "Use this molecule when a table or sidebar needs a person plus email, role or secondary context.",
+                children: jsx.jsxs("div", {
+                  className: "ds-person-list",
+                  children: [
+                    jsx.jsx(PersonInfo, { initials: "AR", name: "Anita Rao", meta: "anita.rao@zyephr.health" }),
+                    jsx.jsx(PersonInfo, { initials: "ML", name: "Marcus Lee", meta: "Doctor" }),
+                    jsx.jsx(PersonInfo, { initials: "SA", name: "Suresh A.", meta: "System Owner" }),
+                  ],
+                }),
+              }),
+              jsx.jsx(Section, {
+                id: "metrics",
+                title: "Metrics",
+                description: "Metric cards should answer an operational question, not just display random totals.",
+                children: jsx.jsxs("div", {
+                  className: "orbac-metrics-grid",
+                  children: [
+                    jsx.jsx(MetricCard, { icon: UserIcon, label: "Staff", value: "54", hint: "Total accounts", tone: "rules" }),
+                    jsx.jsx(MetricCard, { icon: ShieldIcon, label: "Active", value: "42", hint: "Can sign in", tone: "roles" }),
+                    jsx.jsx(MetricCard, { icon: BuildingIcon, label: "Departments", value: "7", hint: "Care units", tone: "actions" }),
+                    jsx.jsx(MetricCard, { icon: CircleMinusIcon, label: "Needs access", value: "2", hint: "No role", tone: "objects" }),
+                  ],
+                }),
+              }),
+              jsx.jsx(Section, {
+                id: "tables",
+                title: "Tables",
+                description: "Table rows, avatars, tags, chevron buttons and footer pagination should match this pattern.",
+                children: jsx.jsxs("div", {
+                  className: "ds-table-card",
+                  children: [
+                    jsx.jsxs("table", {
+                      className: "w-full text-sm",
+                      children: [
+                        jsx.jsx("thead", {
+                          children: jsx.jsxs("tr", {
+                            className: "border-b border-border bg-surface/50 text-left text-xs uppercase tracking-wider text-muted-foreground",
+                            children: [
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Name" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Department" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Roles" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Status" }),
+                              jsx.jsx("th", { className: "px-4 py-2.5 font-medium", children: "Action" }),
+                            ],
+                          }),
+                        }),
+                        jsx.jsxs("tbody", {
+                          className: "divide-y divide-border",
+                          children: [
+                            jsx.jsx(TableRow, { initials: "AR", name: "Anita Rao", meta: "anita.rao@zyephr.health", department: "Administration", roles: ["Owner"], status: "active" }),
+                            jsx.jsx(TableRow, { initials: "ML", name: "Marcus Lee", meta: "marcus.lee@zyephr.health", department: "Cardiology", roles: ["Doctor", "Hospital Admin"], status: "active" }),
+                            jsx.jsx(TableRow, { initials: "DA", name: "Diego Alves", meta: "diego.alves@zyephr.health", department: "Pediatrics", roles: [], status: "invited" }),
+                          ],
+                        }),
+                      ],
+                    }),
+                    jsx.jsxs("div", {
+                      className: "admin-table-footer",
+                      children: [
+                        jsx.jsx("span", { children: "Showing 1-3 of 54 records" }),
+                        jsx.jsxs("div", {
+                          className: "admin-table-pagination",
+                          children: [
+                            jsx.jsx("button", { type: "button", children: jsx.jsx(ChevronRightIcon, { className: "audit-page-prev h-4 w-4" }) }),
+                            jsx.jsx("span", { children: "1 / 18" }),
+                            jsx.jsx("button", { type: "button", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) }),
+                          ],
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              }),
+              jsx.jsx(Section, {
+                id: "side-panels",
+                title: "Side panels",
+                description: "All modules use the same display, edit, inactive and danger states inside the right panel.",
+                children: jsx.jsx("div", {
+                  className: "ds-panel-state-grid",
+                  children: [
+                    jsx.jsx(PanelStateCard, { state: "Display", detail: "Readonly details with an edit action in the header." }),
+                    jsx.jsx(PanelStateCard, { state: "Edit", detail: "Inputs are enabled; save and discard live next to the form group." }),
+                    jsx.jsx(PanelStateCard, { state: "Inactive", detail: "Inactive records stay readable and actions are constrained." }),
+                    jsx.jsx(PanelStateCard, { state: "Danger", detail: "Active toggle and delete actions require confirmation." }),
+                  ],
+                }),
+              }),
+              jsx.jsx(Section, {
+                id: "role-matrix",
+                title: "Role matrix",
+                description: "The permission matrix uses repeated cells, not custom table styling. Include patient CRUD and ORBAC objects here.",
+                children: jsx.jsxs("div", {
+                  className: "ds-matrix-demo",
+                  children: [
+                    jsx.jsxs("div", { className: "ds-matrix-toolbar", children: [jsx.jsx("span", { children: "Role" }), jsx.jsxs(Select, { value: roleScope, onValueChange: setRoleScope, children: [jsx.jsx(SelectTrigger, { className: "h-8 w-[180px] bg-surface text-xs", children: jsx.jsx(SelectValue, {}) }), jsx.jsxs(SelectContent, { children: [jsx.jsx(SelectItem, { value: "owner", children: "Owner" }), jsx.jsx(SelectItem, { value: "doctor", children: "Doctor" }), jsx.jsx(SelectItem, { value: "nurse", children: "Nurse" })] })] })] }),
+                    jsx.jsxs("div", { className: "ds-matrix-grid", children: [
+                      jsx.jsx("span", { className: "ds-matrix-head", children: "Object" }),
+                      jsx.jsx("span", { className: "ds-matrix-head", children: "Create" }),
+                      jsx.jsx("span", { className: "ds-matrix-head", children: "Read" }),
+                      jsx.jsx("span", { className: "ds-matrix-head", children: "Update" }),
+                      jsx.jsx("span", { className: "ds-matrix-head", children: "Delete" }),
+                      jsx.jsx(MatrixLabel, { children: "Patient" }),
+                      jsx.jsx(MatrixCell, { tone: "allowed", children: "Allow" }),
+                      jsx.jsx(MatrixCell, { tone: "allowed", children: "Allow" }),
+                      jsx.jsx(MatrixCell, { tone: "limited", children: "Review" }),
+                      jsx.jsx(MatrixCell, { tone: "denied", children: "Deny" }),
+                      jsx.jsx(MatrixLabel, { children: "Staff" }),
+                      jsx.jsx(MatrixCell, { tone: "allowed", children: "Allow" }),
+                      jsx.jsx(MatrixCell, { tone: "allowed", children: "Allow" }),
+                      jsx.jsx(MatrixCell, { tone: "allowed", children: "Allow" }),
+                      jsx.jsx(MatrixCell, { tone: "limited", children: "Review" }),
+                      jsx.jsx(MatrixLabel, { children: "ORBAC" }),
+                      jsx.jsx(MatrixCell, { tone: "denied", children: "Deny" }),
+                      jsx.jsx(MatrixCell, { tone: "allowed", children: "Allow" }),
+                      jsx.jsx(MatrixCell, { tone: "limited", children: "Review" }),
+                      jsx.jsx(MatrixCell, { tone: "denied", children: "Deny" }),
+                    ] }),
+                  ],
+                }),
+              }),
+            ],
           }),
         ],
       }),
@@ -395,26 +556,49 @@ function TableRow({ initials, name, meta, department, roles, status }) {
     children: [
       jsx.jsx("td", {
         className: "px-4 py-3",
-        children: jsx.jsxs("div", {
-          className: "flex items-center gap-3",
-          children: [
-            jsx.jsx("span", { className: "ds-avatar", children: initials }),
-            jsx.jsxs("div", { children: [jsx.jsx("div", { className: "font-medium text-foreground", children: name }), jsx.jsx("div", { className: "text-xs text-muted-foreground", children: meta })] }),
-          ],
-        }),
+        children: jsx.jsx(PersonInfo, { initials, name, meta }),
       }),
       jsx.jsx("td", { className: "px-4 py-3 text-muted-foreground", children: department }),
-      jsx.jsx("td", { className: "px-4 py-3", children: roles.length ? jsx.jsxs("div", { className: "staff-role-list", children: roles.slice(0, 2).map((role) => jsx.jsx(RoleTag, { role }, role)) }) : jsx.jsx(RoleTag, { role: "No role", empty: true }) }),
-      jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx(StatusPill, { tone: status, children: status }) }),
+      jsx.jsx("td", { className: "px-4 py-3", children: roles.length ? jsx.jsxs("div", { className: "staff-role-list", children: [...roles.slice(0, 2).map((role) => jsx.jsx(RoleTag, { role }, role)), roles.length > 2 ? jsx.jsx(RoleTag, { more: roles.length - 2 }, "more") : null] }) : jsx.jsx(RoleTag, { role: "No role", empty: true }) }),
+      jsx.jsx("td", { className: "px-4 py-3", children: jsx.jsx(StatusPill, { tone: status, className: "ds-tag", children: status }) }),
       jsx.jsx("td", { className: "px-4 py-3 text-right", children: jsx.jsx("button", { className: "ds-icon-button", children: jsx.jsx(ChevronRightIcon, { className: "h-4 w-4" }) }) }),
     ],
   });
 }
 
-function DetailLine({ label, value }) {
-  return jsx.jsxs("div", {
-    className: "ds-detail-line",
-    children: [jsx.jsx("span", { children: label }), jsx.jsx("strong", { children: value })],
+function PanelStateCard({ state, detail }) {
+  return jsx.jsxs("article", {
+    className: "ds-panel-card",
+    children: [
+      jsx.jsxs("header", {
+        children: [
+          jsx.jsxs("span", { className: "ds-state-label", children: [jsx.jsx("span", { className: `ds-state-dot ds-state-${state.toLowerCase()}` }), state] }),
+          jsx.jsx("button", { className: "ds-icon-button", children: state === "Danger" ? jsx.jsx(TrashIcon, { className: "h-4 w-4" }) : jsx.jsx(EditIcon, { className: "h-4 w-4" }) }),
+        ],
+      }),
+      jsx.jsx("p", { children: detail }),
+      jsx.jsxs("div", {
+        className: "ds-panel-formline",
+        children: [
+          jsx.jsx("span", { children: state === "Edit" ? "Editable field" : "Readonly value" }),
+          state === "Edit"
+            ? jsx.jsxs("div", { className: "ds-inline", children: [jsx.jsx("button", { className: "ds-icon-button ds-icon-button-sm", children: jsx.jsx(XIcon, { className: "h-3.5 w-3.5" }) }), jsx.jsx("button", { className: "ds-icon-button ds-icon-button-sm ds-icon-button-primary", children: jsx.jsx(CheckIcon, { className: "h-3.5 w-3.5" }) })] })
+            : jsx.jsx("strong", { children: "Cardiology" }),
+        ],
+      }),
+    ],
+  });
+}
+
+function MatrixLabel({ children }) {
+  return jsx.jsx("span", { className: "ds-matrix-label", children });
+}
+
+function MatrixCell({ tone, children }) {
+  return jsx.jsx("button", {
+    className: `ds-matrix-cell ds-matrix-cell-${tone}`,
+    type: "button",
+    children,
   });
 }
 

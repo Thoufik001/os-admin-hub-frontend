@@ -1423,7 +1423,8 @@ main table td .rounded-full.bg-primary\/20 {
 
 .patient-status {
   display: inline-flex;
-  min-height: 1.5rem;
+  height: 28px;
+  min-height: 28px;
   align-items: center;
   gap: 0.375rem;
   border-radius: var(--ds-radius-control);
@@ -2222,10 +2223,14 @@ main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 > .g
   font-weight: 550;
 }
 
-main table span.inline-flex.items-center.gap-1\.5.rounded-full {
+main span.inline-flex.items-center.gap-1\.5.rounded-full,
+.ds-tag {
+  height: 28px;
   min-height: 28px;
-  border-radius: var(--ds-radius-control);
-  padding-block: 0.1875rem;
+  align-items: center;
+  border-radius: var(--ds-radius-control) !important;
+  padding-block: 0.1875rem !important;
+  line-height: 1.2;
 }
 
 main .border-b.border-border.px-8.pb-5.pt-6 > .flex.items-center.gap-2 > :is(button, a) {
@@ -2622,5 +2627,477 @@ header [role="dialog"][aria-label="Notifications"] > div:nth-child(2) {
   .settings-readonly-value {
     width: 100%;
     padding-left: 0;
+  }
+}
+
+.ds-standalone-shell {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.ds-standalone-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  padding: 1.5rem 2rem;
+}
+
+.ds-standalone-header h1 {
+  margin: 0;
+  color: var(--foreground);
+  font-size: 1.5rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+.ds-standalone-header p {
+  margin: 0.5rem 0 0;
+  max-width: 44rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.design-system-page {
+  display: grid;
+  grid-template-columns: 14rem minmax(0, 1fr);
+  align-items: start;
+  gap: 1.25rem;
+  padding: 1.5rem 2rem 3rem;
+}
+
+.ds-nav {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  max-height: calc(100svh - 2rem);
+  flex-direction: column;
+  gap: 0.125rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-radius-card);
+  background: var(--card);
+  padding: 0.75rem;
+  box-shadow: var(--ds-shadow-soft);
+}
+
+.ds-nav-title {
+  padding: 0.25rem 0.5rem 0.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.ds-nav a {
+  display: flex;
+  height: 2rem;
+  align-items: center;
+  border-radius: var(--ds-radius-control);
+  padding: 0 0.625rem;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background 140ms ease,
+    color 140ms ease;
+}
+
+.ds-nav a:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+
+.ds-content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ds-section {
+  scroll-margin-top: 1rem;
+}
+
+.ds-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.ds-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.ds-field-wide {
+  max-width: 36rem;
+}
+
+.ds-field > span {
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ds-input,
+.ds-textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-radius-control);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  outline: 0;
+  box-shadow: var(--ds-shadow-soft);
+}
+
+.ds-input {
+  height: 2.5rem;
+  padding: 0 0.75rem;
+}
+
+.ds-textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+  padding: 0.75rem;
+}
+
+.ds-input:focus,
+.ds-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.ds-toggle {
+  position: relative;
+  display: inline-flex;
+  width: 2.25rem;
+  height: 1.25rem;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #dfe3ec;
+  padding: 0;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease;
+}
+
+.ds-toggle-on {
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  background: color-mix(in srgb, var(--primary) 64%, #ffffff);
+}
+
+.ds-toggle-thumb {
+  position: absolute;
+  left: 0.125rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.22);
+  transition: transform 140ms ease;
+}
+
+.ds-toggle-on .ds-toggle-thumb {
+  transform: translateX(0.925rem);
+}
+
+.ds-avatar {
+  background: #eef0ff;
+  color: var(--primary);
+  font-weight: 650;
+}
+
+.ds-avatar-sm {
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.625rem;
+}
+
+.ds-avatar-md {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.6875rem;
+}
+
+.ds-avatar-lg {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0.8125rem;
+}
+
+.ds-person-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.ds-person-item {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.ds-person-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.ds-person-copy strong {
+  overflow: hidden;
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-person-copy span {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-icon-button-sm {
+  width: 2rem;
+  height: 2rem;
+}
+
+.ds-icon-button-primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.ds-panel-state-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.ds-panel-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-radius-control);
+  background: var(--surface);
+}
+
+.ds-panel-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem;
+}
+
+.ds-state-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ds-state-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--muted-foreground);
+}
+
+.ds-state-display {
+  background: var(--primary);
+}
+
+.ds-state-edit {
+  background: #2f6f9f;
+}
+
+.ds-state-inactive,
+.ds-state-danger {
+  background: var(--destructive);
+}
+
+.ds-panel-card p {
+  margin: 0;
+  min-height: 4rem;
+  padding: 0.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.ds-panel-formline {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border);
+  padding: 0.75rem;
+}
+
+.ds-panel-formline span,
+.ds-panel-formline strong {
+  color: var(--foreground);
+  font-size: 0.75rem;
+}
+
+.ds-matrix-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ds-matrix-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ds-matrix-toolbar > span {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ds-matrix-grid {
+  display: grid;
+  grid-template-columns: minmax(8rem, 1.1fr) repeat(4, minmax(5rem, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-radius-card);
+  background: var(--card);
+}
+
+.ds-matrix-head,
+.ds-matrix-label,
+.ds-matrix-cell {
+  min-height: 2.75rem;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.ds-matrix-head {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  color: var(--muted-foreground);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ds-matrix-label {
+  display: flex;
+  align-items: center;
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.ds-matrix-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  font-weight: 600;
+}
+
+.ds-matrix-cell-allowed {
+  color: var(--success);
+}
+
+.ds-matrix-cell-limited {
+  color: var(--warning);
+}
+
+.ds-matrix-cell-denied {
+  color: var(--muted-foreground);
+}
+
+.ds-matrix-grid > :nth-last-child(-n + 5) {
+  border-bottom: 0;
+}
+
+.ds-matrix-grid > :nth-child(5n) {
+  border-right: 0;
+}
+
+@media (max-width: 1100px) {
+  .ds-panel-state-grid,
+  .ds-person-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .ds-standalone-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1.25rem;
+  }
+
+  .design-system-page {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1rem 1.25rem 2rem;
+  }
+
+  .ds-nav {
+    top: 0;
+    z-index: 20;
+    max-height: none;
+    flex-direction: row;
+    gap: 0.25rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-radius: var(--ds-radius-control);
+    padding: 0.5rem;
+  }
+
+  .ds-nav-title {
+    display: none;
+  }
+
+  .ds-nav a {
+    flex: 0 0 auto;
+  }
+
+  .ds-field-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .ds-person-list,
+  .ds-panel-state-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ds-matrix-grid {
+    grid-template-columns: minmax(7rem, 1fr) repeat(4, minmax(4.5rem, 1fr));
+    overflow-x: auto;
   }
 }
