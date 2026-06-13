@@ -1,4 +1,4 @@
-import{u as i,r as l,j as e,A as m,P as u,S as x,t as h}from"./index-Df4dNtFP.js";import{T as j,a as g,b as t}from"./tabs-DroLSLbG.js";import"./index-NYxxxYXH.js";import"./index-CWQB4imr.js";
+import{u as i,r as l,j as e,A as m,P as u,S as x,t as h}from"./index-Df4dNtFP.js";import{S as j,a as g,b as t,c as q,d as C}from"./select-9XonwzbX.js";import"./index-NYxxxYXH.js";import"./index-CWQB4imr.js";
 
 const M={staff:"Staff",department:"Department",role:"Role",system:"Session"};
 
@@ -38,23 +38,25 @@ function N(n){
 }
 
 function S(){
-  const n=i(s=>s.audit),[r,o]=l.useState(""),[a,c]=l.useState("all"),d=l.useMemo(()=>[...n].filter(s=>a!=="all"&&s.category!==a?!1:r?`${s.event} ${s.object} ${s.performedBy} ${s.performedByRole}`.toLowerCase().includes(r.toLowerCase()):!0).sort((s,q)=>new Date(q.timestamp).getTime()-new Date(s.timestamp).getTime()),[n,r,a]);
+  const n=i(s=>s.audit),[r,o]=l.useState(""),[a,c]=l.useState("all"),f=l.useMemo(()=>({all:n.length,staff:n.filter(s=>s.category==="staff").length,department:n.filter(s=>s.category==="department").length,role:n.filter(s=>s.category==="role").length,system:n.filter(s=>s.category==="system").length}),[n]),d=l.useMemo(()=>[...n].filter(s=>a!=="all"&&s.category!==a?!1:r?`${s.event} ${s.object} ${s.performedBy} ${s.performedByRole}`.toLowerCase().includes(r.toLowerCase()):!0).sort((s,q)=>new Date(q.timestamp).getTime()-new Date(s.timestamp).getTime()),[n,r,a]);
   return e.jsxs(m,{children:[
     e.jsx(u,{title:"Records & Audit",description:"Every meaningful admin and system event, captured for audit and compliance."}),
     e.jsxs("div",{className:"space-y-4 px-8 py-6",children:[
-      e.jsx(j,{value:a,onValueChange:s=>c(s),children:e.jsxs(g,{className:"bg-surface",children:[
-        e.jsx(t,{value:"all",children:"All events"}),
-        e.jsx(t,{value:"staff",children:"Staff"}),
-        e.jsx(t,{value:"department",children:"Departments"}),
-        e.jsx(t,{value:"role",children:"Roles"}),
-        e.jsx(t,{value:"system",children:"System"})
-      ]})}),
-      e.jsxs("div",{className:"flex items-center gap-2",children:[
-        e.jsxs("div",{className:"relative w-80",children:[
+      e.jsxs("div",{className:"flex flex-wrap items-center gap-2",children:[
+        e.jsxs("div",{className:"relative w-72",children:[
           e.jsx(x,{className:"pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"}),
           e.jsx("input",{value:r,onChange:s=>o(s.target.value),placeholder:"Search events, details, or performers...",className:"h-8 w-full rounded-md border border-border bg-surface pl-8 pr-3 text-sm placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40"})
         ]}),
-        e.jsxs("span",{className:"ml-auto text-xs text-muted-foreground",children:[d.length," events"]})
+        e.jsxs(j,{value:a,onValueChange:s=>c(s),children:[
+          e.jsx(g,{className:"h-8 w-[180px] bg-surface text-xs",children:e.jsx(t,{placeholder:"Module"})}),
+          e.jsxs(q,{children:[
+            e.jsx(C,{value:"all",children:`All (${f.all})`}),
+            e.jsx(C,{value:"staff",children:`Staff (${f.staff})`}),
+            e.jsx(C,{value:"department",children:`Departments (${f.department})`}),
+            e.jsx(C,{value:"role",children:`Roles (${f.role})`}),
+            e.jsx(C,{value:"system",children:`Session (${f.system})`})
+          ]})
+        ]})
       ]}),
       e.jsx("div",{className:"audit-log-table-wrap overflow-hidden rounded-xl border border-border bg-card",children:e.jsxs("table",{className:"audit-log-table w-full text-sm",children:[
         e.jsx("thead",{children:e.jsxs("tr",{className:"border-b border-border bg-surface/50 text-left text-xs uppercase tracking-wider text-muted-foreground",children:[

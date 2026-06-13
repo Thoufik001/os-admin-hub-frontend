@@ -92,6 +92,31 @@ function O() {
     };
   }, [roles]);
 
+  const filterCounts = React.useMemo(() => {
+    const counts = {
+      all: 0,
+      allowed: 0,
+      limited: 0,
+      denied: 0,
+      byRole: {},
+    };
+
+    for (const role of roles) {
+      let roleTotal = 0;
+      for (const object of policyObjects) {
+        for (const action of policyActions) {
+          const state = role.permissions[object]?.[action] ?? "denied";
+          counts[state] += 1;
+          counts.all += 1;
+          roleTotal += 1;
+        }
+      }
+      counts.byRole[role.key] = roleTotal;
+    }
+
+    return counts;
+  }, [roles]);
+
   const policies = React.useMemo(() => {
     const rows = [];
 
@@ -195,8 +220,10 @@ function O() {
                   }),
                   jsx.jsxs(SelectContent, {
                     children: [
-                      jsx.jsx(SelectItem, { value: "all", children: "All subjects" }),
-                      roles.map((role) => jsx.jsx(SelectItem, { value: role.key, children: role.name }, role.id)),
+                      jsx.jsx(SelectItem, { value: "all", children: `All (${filterCounts.all})` }),
+                      roles.map((role) =>
+                        jsx.jsx(SelectItem, { value: role.key, children: `${role.name} (${filterCounts.byRole[role.key] ?? 0})` }, role.id),
+                      ),
                     ],
                   }),
                 ],
@@ -211,17 +238,13 @@ function O() {
                   }),
                   jsx.jsxs(SelectContent, {
                     children: [
-                      jsx.jsx(SelectItem, { value: "all", children: "All statuses" }),
-                      jsx.jsx(SelectItem, { value: "allowed", children: "Allowed" }),
-                      jsx.jsx(SelectItem, { value: "limited", children: "Limited" }),
-                      jsx.jsx(SelectItem, { value: "denied", children: "Denied" }),
+                      jsx.jsx(SelectItem, { value: "all", children: `All (${filterCounts.all})` }),
+                      jsx.jsx(SelectItem, { value: "allowed", children: `Allowed (${filterCounts.allowed})` }),
+                      jsx.jsx(SelectItem, { value: "limited", children: `Limited (${filterCounts.limited})` }),
+                      jsx.jsx(SelectItem, { value: "denied", children: `Denied (${filterCounts.denied})` }),
                     ],
                   }),
                 ],
-              }),
-              jsx.jsxs("span", {
-                className: "ml-auto text-xs text-muted-foreground",
-                children: [policies.length, " policies"],
               }),
             ],
           }),
