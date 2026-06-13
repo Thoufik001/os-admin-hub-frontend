@@ -1115,20 +1115,22 @@ main > .space-y-6 > .grid.lg\:grid-cols-3 > section:nth-child(2) a:hover > svg:l
 
 .audit-row-open {
   display: inline-flex;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 2rem;
+  height: 2rem;
   align-items: center;
   justify-content: center;
-  border: 0;
+  border: 1px solid var(--border);
   border-radius: var(--ds-radius-control);
-  background: transparent;
+  background: var(--surface);
   color: var(--muted-foreground);
+  box-shadow: var(--ds-shadow-xs);
 }
 
 .audit-row:hover .audit-row-open,
 .audit-row-open:hover,
 .audit-row-open:focus-visible {
-  background: var(--accent);
+  border-color: var(--border-strong);
+  background: var(--surface);
   color: var(--foreground);
   outline: none;
 }
