@@ -1372,6 +1372,41 @@ main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 > .g
   opacity: 1 !important;
 }
 
+.staff-role-pill {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-radius-control);
+  background: #ffffff;
+  padding: 0.125rem 0.5rem;
+  color: var(--foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.staff-role-pill-icon {
+  width: 0.9em;
+  height: 0.9em;
+  flex: 0 0 auto;
+  color: var(--primary);
+  stroke-width: 1.8;
+}
+
+.staff-role-pill-empty {
+  border-color: color-mix(in srgb, var(--destructive, #d63b4a) 38%, transparent);
+  background: color-mix(in srgb, var(--destructive, #d63b4a) 8%, #ffffff);
+  color: var(--destructive, #d63b4a);
+  box-shadow: none;
+}
+
+.staff-role-pill-empty .staff-role-pill-icon {
+  color: var(--destructive, #d63b4a);
+}
+
 @media (max-width: 900px) {
   .settings-readonly-value {
     width: 100%;
