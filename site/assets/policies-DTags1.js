@@ -17,6 +17,50 @@ import { S as Select, a as SelectTrigger, b as SelectValue, c as SelectContent, 
 import "./index-CWQB4imr.js";
 
 const ChevronRightIcon = createIcon("chevron-right", [["path", { d: "m9 18 6-6-6-6", key: "chevron-1" }]]);
+const doctorRoleIconPaths = [
+  ["path", { d: "M4.8 2.3v4.2a4.2 4.2 0 0 0 8.4 0V2.3", key: "doctor-1" }],
+  ["path", { d: "M8.5 14.5a4.5 4.5 0 0 0 9 0V12", key: "doctor-2" }],
+  ["circle", { cx: "18", cy: "10", r: "2", key: "doctor-3" }],
+];
+const DoctorRoleIcon = createIcon("stethoscope", doctorRoleIconPaths);
+const nurseRoleIconPaths = [
+  ["path", { d: "M19 14c1.5-1.5 3-3.4 3-5.7A5.2 5.2 0 0 0 12 6.2 5.2 5.2 0 0 0 2 8.3C2 12.8 12 21 12 21s1.4-1.1 3-2.7", key: "nurse-1" }],
+  ["path", { d: "M3.2 12h3.2l1.8-3.5 3.6 7 1.8-3.5H21", key: "nurse-2" }],
+];
+const NurseRoleIcon = createIcon("heart-pulse", nurseRoleIconPaths);
+const managerRoleIconPaths = [
+  ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "manager-1" }],
+  ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "manager-2" }],
+  ["path", { d: "M2 12h20", key: "manager-3" }],
+];
+const ManagerRoleIcon = createIcon("briefcase", managerRoleIconPaths);
+const pharmacistRoleIconPaths = [
+  ["path", { d: "m10.5 20.5 10-10a4.95 4.95 0 0 0-7-7l-10 10a4.95 4.95 0 0 0 7 7Z", key: "pharmacy-1" }],
+  ["path", { d: "m8.5 8.5 7 7", key: "pharmacy-2" }],
+];
+const PharmacistRoleIcon = createIcon("pill", pharmacistRoleIconPaths);
+const frontDeskRoleIconPaths = [
+  ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", key: "front-1" }],
+  ["path", { d: "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2", key: "front-2" }],
+  ["path", { d: "M8 12h8", key: "front-3" }],
+  ["path", { d: "M8 16h5", key: "front-4" }],
+];
+const FrontDeskRoleIcon = createIcon("clipboard-list", frontDeskRoleIconPaths);
+const staffRoleIconPaths = [
+  ["path", { d: "M18 20a6 6 0 0 0-12 0", key: "staff-1" }],
+  ["circle", { cx: "12", cy: "10", r: "4", key: "staff-2" }],
+];
+const StaffRoleIcon = createIcon("user-round", staffRoleIconPaths);
+const roleIconFor = (role) => {
+  const value = (role ?? "").toLowerCase();
+  if (value.includes("doctor")) return DoctorRoleIcon;
+  if (value.includes("nurse")) return NurseRoleIcon;
+  if (value.includes("pharmac")) return PharmacistRoleIcon;
+  if (value.includes("front") || value.includes("desk") || value.includes("reception")) return FrontDeskRoleIcon;
+  if (value.includes("manager")) return ManagerRoleIcon;
+  if (value.includes("owner") || value.includes("admin")) return ShieldIcon;
+  return StaffRoleIcon;
+};
 const TABLE_PAGE_SIZE = 50;
 
 const actionLanguage = {
@@ -273,8 +317,9 @@ function O() {
                   }),
                   jsx.jsx("tbody", {
                     className: "divide-y divide-border",
-                    children: policies.slice(0, TABLE_PAGE_SIZE).map((policy) =>
-                      jsx.jsxs(
+                    children: policies.slice(0, TABLE_PAGE_SIZE).map((policy) => {
+                      const RoleIcon = roleIconFor(policy.role);
+                      return jsx.jsxs(
                         "tr",
                         {
                           className: "hover:bg-surface/40",
@@ -283,7 +328,7 @@ function O() {
                               className: "px-4 py-3",
                               children: jsx.jsxs("span", {
                                 className: "staff-role-pill",
-                                children: [jsx.jsx(ShieldIcon, { className: "staff-role-pill-icon" }), policy.role],
+                                children: [jsx.jsx(RoleIcon, { className: "staff-role-pill-icon" }), policy.role],
                               }),
                             }),
                             jsx.jsx("td", {
@@ -312,8 +357,8 @@ function O() {
                           ],
                         },
                         policy.id,
-                      ),
-                    ),
+                      );
+                    }),
                   }),
                 ],
               }),
