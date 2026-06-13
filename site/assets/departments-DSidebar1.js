@@ -43,6 +43,10 @@ const EditIcon = createIcon("square-pen", [
   ["path", { d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7", key: "edit-1" }],
   ["path", { d: "M18.4 2.6a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4Z", key: "edit-2" }],
 ]);
+const XIcon = createIcon("x", [
+  ["path", { d: "M18 6 6 18", key: "x-1" }],
+  ["path", { d: "m6 6 12 12", key: "x-2" }],
+]);
 const ChevronRightIcon = createIcon("chevron-right", [["path", { d: "m9 18 6-6-6-6", key: "chevron-1" }]]);
 const TABLE_PAGE_SIZE = 50;
 const staffInitials = (person) => `${person.firstName?.[0] ?? ""}${person.lastName?.[0] ?? ""}`.toUpperCase();
@@ -204,8 +208,11 @@ function DepartmentDrawer({ open, onOpenChange, editingId }) {
       jsx.jsx("button", { type: "button", className: "admin-detail-backdrop", onClick: () => onOpenChange(false), "aria-label": "Close department details" }),
       jsx.jsxs("aside", { className: "admin-detail-sheet", role: "dialog", "aria-modal": "true", "aria-labelledby": "department-detail-title", children: [
         jsx.jsxs("div", { className: "admin-detail-header", children: [
-          jsx.jsxs("div", { className: "flex min-w-0 items-start gap-3", children: [jsx.jsx("div", { className: "patient-avatar patient-detail-avatar", children: department?.code ?? "+" }), jsx.jsxs("div", { className: "min-w-0 flex-1", children: [jsx.jsx("h2", { id: "department-detail-title", className: "truncate text-base font-semibold text-foreground", children: department ? department.name : "Add department" }), jsx.jsx("p", { className: "mt-0.5 text-sm text-muted-foreground", children: department ? department.description : "Create a department" })] })] }),
-          department && !editing ? jsx.jsx("button", { type: "button", onClick: () => setEditing(true), className: "inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: [jsx.jsx(EditIcon, { className: "h-3.5 w-3.5" }), "Edit"] }) : null,
+          jsx.jsxs("div", { className: "min-w-0 flex-1", children: [jsx.jsx("h2", { id: "department-detail-title", className: "truncate text-base font-semibold text-foreground", children: department ? department.name : "Add department" }), jsx.jsx("p", { className: "mt-0.5 text-sm text-muted-foreground", children: department ? department.description : "Create a department" })] }),
+          jsx.jsxs("div", { className: "flex items-center gap-2", children: [
+            department && !editing ? jsx.jsx("button", { type: "button", onClick: () => setEditing(true), className: "inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: [jsx.jsx(EditIcon, { className: "h-3.5 w-3.5" }), "Edit"] }) : null,
+            jsx.jsx("button", { type: "button", onClick: () => onOpenChange(false), className: "inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground hover:bg-accent hover:text-foreground", "aria-label": "Close department details", children: jsx.jsx(XIcon, { className: "h-4 w-4" }) }),
+          ] }),
         ] }),
         editing ? jsx.jsxs(jsx.Fragment, { children: [
           jsx.jsxs("div", { className: "admin-detail-body", children: [
@@ -224,14 +231,14 @@ function DepartmentDrawer({ open, onOpenChange, editingId }) {
                 jsx.jsx("button", { type: "button", onClick: () => setConfirmAction({ type: "delete", title: "Delete department", body: `Delete ${department.name}? ${staffCount} staff assignments will become unassigned.`, action: "Delete" }), className: "danger-delete-button", children: "Delete" }),
               ] }),
             ] }) : null,
+            jsx.jsxs("div", { className: "admin-inline-actions", children: [jsx.jsx("button", { onClick: () => department ? setEditing(false) : onOpenChange(false), className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Discard" }), jsx.jsx("button", { onClick: save, className: "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: department ? canEdit ? "Save changes" : "Request approval" : "Create department" })] }),
           ] }),
-          jsx.jsxs("div", { className: "admin-detail-footer", children: [jsx.jsx("button", { onClick: () => department ? setEditing(false) : onOpenChange(false), className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Discard" }), jsx.jsx("button", { onClick: save, className: "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: department ? canEdit ? "Save changes" : "Request approval" : "Create department" })] }),
         ] }) : jsx.jsxs(jsx.Fragment, { children: [
           jsx.jsxs("div", { className: "admin-detail-body", children: [
-	            jsx.jsxs("div", { className: "overflow-hidden rounded-lg border border-border", children: [jsx.jsx(DetailRow, { label: "Code", value: department?.code }), jsx.jsx(DetailRow, { label: "Head", value: head ? staffName(head) : "Unassigned" }), jsx.jsx(DetailRow, { label: "Staff", value: staffCount }), jsx.jsx(DetailRow, { label: "Status", value: department?.status === "active" ? "Active" : "Inactive" })] }),
+		            jsx.jsxs("div", { className: "overflow-hidden rounded-lg border border-border", children: [jsx.jsx(DetailRow, { label: "Code", value: department?.code }), jsx.jsx(DetailRow, { label: "Head", value: head ? staffName(head) : "Unassigned" }), jsx.jsx(DetailRow, { label: "Staff", value: staffCount }), jsx.jsx(DetailRow, { label: "Status", value: department?.status === "active" ? "Active" : "Inactive" })] }),
             jsx.jsx("p", { className: "rounded-lg border border-border bg-surface px-3 py-3 text-sm leading-6 text-muted-foreground", children: "Department changes are saved directly for owners. Limited administrators submit an approval request to a user with department-management access." }),
+            jsx.jsxs("div", { className: "admin-inline-actions", children: [jsx.jsx("button", { onClick: () => onOpenChange(false), className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Close" }), jsx.jsx("button", { onClick: () => setEditing(true), className: "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: "Edit" })] }),
           ] }),
-          jsx.jsxs("div", { className: "admin-detail-footer", children: [jsx.jsx("button", { onClick: () => onOpenChange(false), className: "h-8 rounded-md border border-border bg-surface px-3 text-xs font-medium text-foreground hover:bg-accent", children: "Close" }), jsx.jsx("button", { onClick: () => setEditing(true), className: "h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90", children: "Edit" })] }),
         ] }),
         confirmAction ? jsx.jsx(DangerConfirm, { confirm: confirmAction, onCancel: () => setConfirmAction(null), onConfirm: confirmDanger }) : null,
       ] }),
