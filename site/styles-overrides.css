@@ -1374,13 +1374,13 @@ main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 > .g
 
 .staff-role-pill {
   display: inline-flex;
-  min-height: 24px;
+  min-height: 28px;
   align-items: center;
   gap: 0.25rem;
   border: 1px solid var(--border);
   border-radius: var(--ds-radius-control);
   background: #ffffff;
-  padding: 0.125rem 0.5rem;
+  padding: 0.1875rem 0.5rem;
   color: var(--foreground);
   font-size: 0.75rem;
   font-weight: 500;
@@ -1397,14 +1397,21 @@ main > .space-y-6 > .grid.grid-cols-1.gap-3.sm\:grid-cols-2.lg\:grid-cols-4 > .g
 }
 
 .staff-role-pill-empty {
-  border-color: color-mix(in srgb, var(--destructive, #d63b4a) 38%, transparent);
-  background: color-mix(in srgb, var(--destructive, #d63b4a) 8%, #ffffff);
-  color: var(--destructive, #d63b4a);
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted-foreground);
   box-shadow: none;
+  padding-inline: 0;
 }
 
 .staff-role-pill-empty .staff-role-pill-icon {
-  color: var(--destructive, #d63b4a);
+  color: var(--muted-foreground);
+}
+
+main table span.inline-flex.items-center.gap-1\.5.rounded-full {
+  min-height: 28px;
+  border-radius: var(--ds-radius-control);
+  padding-block: 0.1875rem;
 }
 
 main .border-b.border-border.px-8.pb-5.pt-6 > .flex.items-center.gap-2 > :is(button, a) {
