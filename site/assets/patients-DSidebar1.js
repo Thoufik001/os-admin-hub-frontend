@@ -67,7 +67,7 @@ const CheckCircleIcon = createIcon("circle-check", [
 ]);
 const TABLE_PAGE_SIZE = 50;
 
-const patients = [
+const patientSeeds = [
   { id: "p1", mrn: "MRN-24031", name: "Aarav Mehta", age: 42, gender: "M", status: "in-care", department: "Cardiology", doctor: "Marcus Lee", nurse: "Ines Moreau", lastVisit: "2026-06-13T08:55:00+05:30", insurance: "Active", access: "Doctor, Nurse", reason: "Post angioplasty review" },
   { id: "p2", mrn: "MRN-24046", name: "Noor Khan", age: 28, gender: "F", status: "critical", department: "Emergency", doctor: "Ji-ho Park", nurse: "Sara Khan", lastVisit: "2026-06-13T08:21:00+05:30", insurance: "Pending", access: "Doctor only", reason: "Observation after trauma intake" },
   { id: "p3", mrn: "MRN-23988", name: "Elena Rossi", age: 61, gender: "F", status: "sent-lab", department: "Radiology", doctor: "Ahmed Farouk", nurse: "Priya Shah", lastVisit: "2026-06-12T18:05:00+05:30", insurance: "Active", access: "Doctor, Lab", reason: "MRI review and lab correlation" },
@@ -76,6 +76,61 @@ const patients = [
   { id: "p6", mrn: "MRN-24061", name: "Lina Chen", age: 19, gender: "F", status: "scheduled", department: "General Medicine", doctor: "Sara Khan", nurse: "Deepa Nair", lastVisit: "2026-06-12T10:30:00+05:30", insurance: "Unverified", access: "Front Desk", reason: "New patient intake" },
   { id: "p7", mrn: "MRN-23974", name: "Raj Menon", age: 54, gender: "M", status: "follow-up", department: "Cardiology", doctor: "Marcus Lee", nurse: "Anita Rao", lastVisit: "2026-06-11T16:40:00+05:30", insurance: "Active", access: "Owner approval", reason: "Follow-up after sensitive access review" },
   { id: "p8", mrn: "MRN-24025", name: "Maya Thomas", age: 47, gender: "F", status: "follow-up", department: "Radiology", doctor: "Elena Rossi", nurse: "Priya Shah", lastVisit: "2026-06-12T09:45:00+05:30", insurance: "Active", access: "Doctor, Technician", reason: "Ultrasound follow-up" },
+];
+
+const patientNames = [
+  "Aditya Nair", "Aisha Rahman", "Ananya Iyer", "Arjun Menon", "Bhavana Rao", "Chen Wei", "Deepa Nair", "Dev Patel", "Fatima Ali", "George Mathew",
+  "Harini Shah", "Ibrahim Khan", "Ishaan Kapoor", "Jaya Krishnan", "Karthik Raman", "Keiko Tanaka", "Leela Das", "Luis Fernandes", "Meera Joshi", "Mina Park",
+  "Nikhil Thomas", "Nora D'Souza", "Oscar Grant", "Pooja Balan", "Priya Nair", "Rahul Sethi", "Ravi Kumar", "Riya Chatterjee", "Samira Ahmed", "Sara Khan",
+  "Selvi Nadar", "Sofia Rossi", "Suresh A.", "Tara Singh", "Uma Reddy", "Victor Chen", "Yara Hassan", "Zain Malik", "Amina Begum", "Ramesh Kumar",
+];
+const patientDepartments = ["Cardiology", "Emergency", "Pediatrics", "Radiology", "Pharmacy", "General Medicine", "Oncology", "Neurology", "Orthopedics"];
+const patientDoctors = ["Marcus Lee", "Ji-ho Park", "Ines Moreau", "Ahmed Farouk", "Naomi Tanaka", "Sara Khan", "Elena Rossi"];
+const patientNurses = ["Ines Moreau", "Sara Khan", "Priya Shah", "Fatima Bensalem", "Deepa Nair", "Anita Rao"];
+const patientStatusCycle = ["in-care", "in-care", "in-care", "follow-up", "scheduled", "completed", "sent-lab", "in-care", "in-care", "critical"];
+const patientReasonByStatus = {
+  scheduled: "Upcoming outpatient visit",
+  "in-care": "Active care plan review",
+  critical: "Requires urgent clinical review",
+  "follow-up": "Follow-up appointment pending",
+  "sent-lab": "Lab work requested",
+  completed: "Visit completed and notes signed",
+};
+const patientModuleNow = Date.now();
+const isoMinutesAgo = (minutes) => new Date(patientModuleNow - minutes * 60 * 1000).toISOString();
+const generatedPatients = Array.from({ length: 228 }, (_, index) => {
+  const serial = index + 9;
+  const name = patientNames[index % patientNames.length];
+  const status = patientStatusCycle[index % patientStatusCycle.length];
+  const department = patientDepartments[(index * 3) % patientDepartments.length];
+  const doctor = patientDoctors[(index * 5) % patientDoctors.length];
+  const nurse = patientNurses[(index * 7) % patientNurses.length];
+  const minutesAgo = 45 + (index * 397) % (60 * 24 * 120);
+  return {
+    id: `p${serial}`,
+    mrn: `MRN-${24000 + serial}`,
+    name,
+    age: 18 + (index * 7) % 68,
+    gender: index % 3 === 0 ? "F" : "M",
+    status,
+    department,
+    doctor,
+    nurse,
+    lastVisit: isoMinutesAgo(minutesAgo),
+    createdAt: isoMinutesAgo(1440 * (10 + (index % 120))),
+    updatedAt: isoMinutesAgo(60 + (index % 240) * 30),
+    insurance: index % 11 === 0 ? "Pending" : index % 13 === 0 ? "Unverified" : "Active",
+    access: status === "critical" ? "Doctor only" : status === "sent-lab" ? "Doctor, Lab" : "Doctor, Nurse",
+    reason: patientReasonByStatus[status],
+  };
+});
+const patients = [
+  ...patientSeeds.map((patient, index) => ({
+    ...patient,
+    createdAt: isoMinutesAgo(1440 * (30 + index)),
+    updatedAt: isoMinutesAgo(40 + index * 25),
+  })),
+  ...generatedPatients,
 ];
 
 const statusLabels = {
@@ -144,26 +199,40 @@ function PatientPage() {
   const [query, setQuery] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [departmentFilter, setDepartmentFilter] = React.useState("all");
-  const [sortBy, setSortBy] = React.useState("lastVisit");
+  const [dateFilter, setDateFilter] = React.useState("all");
+  const [sortBy, setSortBy] = React.useState("lastVisitDesc");
   const [selectedId, setSelectedId] = React.useState(patients[0].id);
   const [detailOpen, setDetailOpen] = React.useState(false);
   const departments = React.useMemo(() => [...new Set(patientRecords.map((patient) => patient.department))].sort(), [patientRecords]);
+  const dateRangeCounts = React.useMemo(() => {
+    const now = Date.now();
+    const withinDays = (days) => patientRecords.filter((patient) => now - new Date(patient.lastVisit).getTime() <= days * 24 * 60 * 60 * 1000).length;
+    return {
+      today: withinDays(1),
+      week: withinDays(7),
+      month: withinDays(30),
+    };
+  }, [patientRecords]);
   const filtered = React.useMemo(() => {
     const needle = query.trim().toLowerCase();
+    const now = Date.now();
+    const dateRangeDays = { today: 1, week: 7, month: 30 }[dateFilter];
     return patientRecords
       .filter((patient) => {
         const matchesQuery = !needle || `${patient.name} ${patient.mrn} ${patient.doctor} ${patient.nurse} ${patient.department}`.toLowerCase().includes(needle);
         const matchesStatus = statusFilter === "all" || patient.status === statusFilter;
         const matchesDepartment = departmentFilter === "all" || patient.department === departmentFilter;
-        return matchesQuery && matchesStatus && matchesDepartment;
+        const matchesDate = !dateRangeDays || now - new Date(patient.lastVisit).getTime() <= dateRangeDays * 24 * 60 * 60 * 1000;
+        return matchesQuery && matchesStatus && matchesDepartment && matchesDate;
       })
       .sort((a, b) => {
-        if (sortBy === "name") return a.name.localeCompare(b.name);
-        if (sortBy === "department") return a.department.localeCompare(b.department) || a.name.localeCompare(b.name);
-        if (sortBy === "doctor") return a.doctor.localeCompare(b.doctor) || a.name.localeCompare(b.name);
+        if (sortBy === "nameAsc") return a.name.localeCompare(b.name);
+        if (sortBy === "createdDesc") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        if (sortBy === "updatedDesc") return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        if (sortBy === "lastVisitAsc") return new Date(a.lastVisit).getTime() - new Date(b.lastVisit).getTime();
         return new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime();
       });
-  }, [patientRecords, query, statusFilter, departmentFilter, sortBy]);
+  }, [patientRecords, query, statusFilter, departmentFilter, dateFilter, sortBy]);
   const tableRows = filtered.slice(0, TABLE_PAGE_SIZE);
   React.useEffect(() => {
     if (filtered.length > 0 && !filtered.some((patient) => patient.id === selectedId)) {
@@ -215,66 +284,97 @@ function PatientPage() {
             className: "patient-layout space-y-4",
             children: [
               jsx.jsxs("div", {
-                className: "filter-toolbar flex flex-wrap items-center gap-2",
+                className: "patient-toolbar filter-toolbar",
                 children: [
                   jsx.jsxs("div", {
-                    className: "relative w-72",
+                    className: "patient-search-control relative",
                     children: [
                       jsx.jsx(SearchIcon, { className: "pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" }),
                       jsx.jsx("input", {
                         value: query,
                         onChange: (event) => setQuery(event.target.value),
                         placeholder: "Search patients, MRN, doctor, or nurse",
-                        className: "h-8 w-full rounded-md border border-border bg-surface pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40",
+                        className: "h-10 w-full rounded-md border border-border bg-surface pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40",
                       }),
                     ],
                   }),
-                  jsx.jsxs(Select, {
-                    value: statusFilter,
-                    onValueChange: setStatusFilter,
+                  jsx.jsxs("div", {
+                    className: "patient-control-group patient-filter-group",
                     children: [
-                      jsx.jsx(SelectTrigger, {
-                        className: "h-8 w-[170px] bg-surface text-xs",
-                        children: jsx.jsx(SelectValue, { placeholder: "Status" }),
-                      }),
-                      jsx.jsxs(SelectContent, {
+                      jsx.jsx("span", { className: "patient-toolbar-label", children: "Filters" }),
+                      jsx.jsxs(Select, {
+                        value: statusFilter,
+                        onValueChange: setStatusFilter,
                         children: [
-                          jsx.jsx(SelectItem, { value: "all", children: `All (${patientRecords.length})` }),
-                          Object.entries(statusLabels).map(([value, label]) => jsx.jsx(SelectItem, { value, children: `${label} (${patientRecords.filter((patient) => patient.status === value).length})` }, value)),
+                          jsx.jsx(SelectTrigger, {
+                            className: "patient-select-trigger h-10 w-[170px] bg-surface text-xs",
+                            children: jsx.jsx(SelectValue, { placeholder: "Status" }),
+                          }),
+                          jsx.jsxs(SelectContent, {
+                            children: [
+                              jsx.jsx(SelectItem, { value: "all", children: `All patients (${patientRecords.length})` }),
+                              Object.entries(statusLabels).map(([value, label]) => jsx.jsx(SelectItem, { value, children: `${label} (${patientRecords.filter((patient) => patient.status === value).length})` }, value)),
+                            ],
+                          }),
+                        ],
+                      }),
+                      jsx.jsxs(Select, {
+                        value: departmentFilter,
+                        onValueChange: setDepartmentFilter,
+                        children: [
+                          jsx.jsx(SelectTrigger, {
+                            className: "patient-select-trigger h-10 w-[190px] bg-surface text-xs",
+                            children: jsx.jsx(SelectValue, { placeholder: "Department" }),
+                          }),
+                          jsx.jsxs(SelectContent, {
+                            children: [
+                              jsx.jsx(SelectItem, { value: "all", children: `Any department (${patientRecords.length})` }),
+                              departments.map((department) => jsx.jsx(SelectItem, { value: department, children: `${department} (${patientRecords.filter((patient) => patient.department === department).length})` }, department)),
+                            ],
+                          }),
+                        ],
+                      }),
+                      jsx.jsxs(Select, {
+                        value: dateFilter,
+                        onValueChange: setDateFilter,
+                        children: [
+                          jsx.jsx(SelectTrigger, {
+                            className: "patient-select-trigger h-10 w-[170px] bg-surface text-xs",
+                            children: jsx.jsx(SelectValue, { placeholder: "Visit date" }),
+                          }),
+                          jsx.jsxs(SelectContent, {
+                            children: [
+                              jsx.jsx(SelectItem, { value: "all", children: `Any visit date (${patientRecords.length})` }),
+                              jsx.jsx(SelectItem, { value: "today", children: `Last 24 hours (${dateRangeCounts.today})` }),
+                              jsx.jsx(SelectItem, { value: "week", children: `Last 7 days (${dateRangeCounts.week})` }),
+                              jsx.jsx(SelectItem, { value: "month", children: `Last 30 days (${dateRangeCounts.month})` }),
+                            ],
+                          }),
                         ],
                       }),
                     ],
                   }),
-                  jsx.jsxs(Select, {
-                    value: departmentFilter,
-                    onValueChange: setDepartmentFilter,
+                  jsx.jsxs("div", {
+                    className: "patient-control-group patient-sort-group",
                     children: [
-                      jsx.jsx(SelectTrigger, {
-                        className: "h-8 w-[190px] bg-surface text-xs",
-                        children: jsx.jsx(SelectValue, { placeholder: "Department" }),
-                      }),
-                      jsx.jsxs(SelectContent, {
+                      jsx.jsx("span", { className: "patient-toolbar-label", children: "Sort" }),
+                      jsx.jsxs(Select, {
+                        value: sortBy,
+                        onValueChange: setSortBy,
                         children: [
-                          jsx.jsx(SelectItem, { value: "all", children: `All departments (${patientRecords.length})` }),
-                          departments.map((department) => jsx.jsx(SelectItem, { value: department, children: `${department} (${patientRecords.filter((patient) => patient.department === department).length})` }, department)),
-                        ],
-                      }),
-                    ],
-                  }),
-                  jsx.jsxs(Select, {
-                    value: sortBy,
-                    onValueChange: setSortBy,
-                    children: [
-                      jsx.jsx(SelectTrigger, {
-                        className: "h-8 w-[170px] bg-surface text-xs",
-                        children: jsx.jsx(SelectValue, { placeholder: "Sort" }),
-                      }),
-                      jsx.jsxs(SelectContent, {
-                        children: [
-                          jsx.jsx(SelectItem, { value: "lastVisit", children: "Sort: Recent" }),
-                          jsx.jsx(SelectItem, { value: "name", children: "Sort: Name" }),
-                          jsx.jsx(SelectItem, { value: "department", children: "Sort: Department" }),
-                          jsx.jsx(SelectItem, { value: "doctor", children: "Sort: Doctor" }),
+                          jsx.jsx(SelectTrigger, {
+                            className: "patient-sort-trigger h-10 w-[210px] bg-surface text-xs",
+                            children: jsx.jsx(SelectValue, { placeholder: "Sort by" }),
+                          }),
+                          jsx.jsxs(SelectContent, {
+                            children: [
+                              jsx.jsx(SelectItem, { value: "lastVisitDesc", children: "Last visit: newest" }),
+                              jsx.jsx(SelectItem, { value: "lastVisitAsc", children: "Last visit: oldest" }),
+                              jsx.jsx(SelectItem, { value: "nameAsc", children: "Name: A to Z" }),
+                              jsx.jsx(SelectItem, { value: "createdDesc", children: "Date created: newest" }),
+                              jsx.jsx(SelectItem, { value: "updatedDesc", children: "Date updated: newest" }),
+                            ],
+                          }),
                         ],
                       }),
                     ],
