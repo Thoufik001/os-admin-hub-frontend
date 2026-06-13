@@ -739,7 +739,7 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(
 
 .recent-activity-table {
   width: 100%;
-  min-width: 46rem;
+  min-width: 56rem;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.8125rem;
@@ -757,7 +757,7 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(
 }
 
 .recent-activity-table td {
-  height: 3.25rem;
+  height: 4.5rem;
   border-bottom: 1px solid var(--border);
   padding: 0.625rem 1.25rem;
   vertical-align: middle;
@@ -769,22 +769,36 @@ main > .space-y-6 > .grid.grid-cols-1.gap-4.lg\:grid-cols-5 > section:nth-child(
 
 .recent-activity-table th:nth-child(1),
 .recent-activity-table td:nth-child(1) {
-  width: 54%;
+  width: 27%;
 }
 
 .recent-activity-table th:nth-child(2),
 .recent-activity-table td:nth-child(2) {
-  width: 16%;
+  width: 29%;
 }
 
 .recent-activity-table th:nth-child(3),
 .recent-activity-table td:nth-child(3) {
-  width: 9rem;
+  width: 22%;
 }
 
 .recent-activity-table th:nth-child(4),
 .recent-activity-table td:nth-child(4) {
-  width: 7.5rem;
+  width: 12%;
+}
+
+.recent-activity-table th:nth-child(5),
+.recent-activity-table td:nth-child(5) {
+  width: 10%;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.recent-action-cell,
+.recent-detail-cell,
+.recent-activity-table td:nth-child(3) {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .recent-primary,
