@@ -11,7 +11,7 @@ import {
   S as SearchIcon,
   t as formatRelativeTime,
 } from "./index-Df4dNtFP.js";
-import { S as StatusPill } from "./StatusPill-CQnxW3Fx.js";
+import { S as StatusPill } from "./StatusPill-DNoDot1.js";
 import { S as Select, a as SelectTrigger, b as SelectValue, c as SelectContent, d as SelectItem } from "./select-9XonwzbX.js";
 import "./index-CWQB4imr.js";
 
