@@ -56,6 +56,8 @@
   --ds-control-height: 2.5rem;
   --ds-button-height: 2rem;
   --ds-shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --ds-shell-header-height: 3.5rem;
+  --ds-shell-border: #dfe5ee;
 }
 
 body {
@@ -322,16 +324,23 @@ aside.bg-sidebar,
 
 body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar {
   width: 15rem;
-  border-right-color: #dfe5ee;
+  border-right-color: var(--ds-shell-border);
   background: #ffffff;
   box-shadow: none;
 }
 
+body > .flex.min-h-screen.w-full.bg-background.text-foreground > .flex.min-w-0.flex-1.flex-col > header {
+  height: var(--ds-shell-header-height) !important;
+  min-height: var(--ds-shell-header-height);
+  border-bottom-color: var(--ds-shell-border) !important;
+}
+
 body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar > div:first-child {
-  height: 4rem;
+  height: var(--ds-shell-header-height) !important;
+  min-height: var(--ds-shell-header-height);
   gap: 0.625rem;
   padding: 0 1rem;
-  border-bottom: 1px solid #eef2f7;
+  border-bottom: 1px solid var(--ds-shell-border);
 }
 
 body > .flex.min-h-screen.w-full.bg-background.text-foreground > aside.bg-sidebar > div:first-child > div:first-child {
